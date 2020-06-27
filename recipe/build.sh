@@ -20,10 +20,13 @@ pushd src
               --without-readline          \
               --with-libedit              \
               --with-crypto-impl=openssl  \
+              --with-tls-impl=openssl     \
               --without-system-verto
   make -j${CPU_COUNT} ${VERBOSE_AT}
-  if [ "${PY_VER}" == "2.7" ]; then
-    make check
-  fi
+
+  # Turn off built-in test since they rely on network configurations we
+  # cannot guarantee on our CI systems.
+  #make check
+
   make install
 popd

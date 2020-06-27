@@ -1,4 +1,4 @@
-{% set version = "1.17.1" %}
+{% set version = "1.18.2" %}
 
 package:
   name: krb5
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/krb5/krb5/archive/krb5-{{ version }}-final.tar.gz
-  sha256: 8bdedbfb0bbb245217e23290437916d70b315514e6f7cc088b6e82d1310afe0b
+  sha256: 3a92fb44d06a60a79c71a031a528246bf4cf3badad150a2b91dfa7c4702c6c19
 
 build:
   number: 0
@@ -14,6 +14,11 @@ build:
   run_exports:
     # stable within minor revisions: https://abi-laboratory.pro/tracker/timeline/krb5/
     - {{ pin_subpackage('krb5', max_pin='x.x') }}
+  ignore_run_exports:
+    # C++ and Tcl are only needed for performing built-in unit tests.
+    - libcxx          # [osx]
+    - libstdcxx-ng    # [linux]
+    - tk
   missing_dso_whitelist:          # [osx]
     - /usr/lib/libresolv.9.dylib  # [osx]
 
@@ -29,7 +34,6 @@ requirements:
     - make        # [unix]
     - python 3.7  # [not win]
     - python      # [win]
-    - openssl
   host:
     - libedit     # [unix]
     - openssl
@@ -41,7 +45,9 @@ test:
   requires:
     # without this the solver goes into a strange corner and returns python 2.0
     - python 3.7.*  # [not win]
-    - python        # [win]
+    # Python 3.8 changed the default behavior of `ctypes.CDLL`, and it's more
+    # expedient to add this constraint rather than rewrite the test script.
+    - python <3.8   # [win]
   commands:
     - conda inspect linkages -p $PREFIX krb5  # [not win]
     - conda inspect objects -p $PREFIX krb5  # [osx]
@@ -58,3 +64,4 @@ extra:
     - ocefpaf
     - mingwandroid
     - mariusvniekerk
+    - chenghlee
