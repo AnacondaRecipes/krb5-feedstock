@@ -36,7 +36,7 @@ requirements:
     - python      # [win]
   host:
     - libedit     # [unix]
-    - openssl
+    - openssl     # [unix]
     - tk
   run:
     - {{ pin_compatible('libedit') }}  # [unix]
