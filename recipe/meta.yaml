@@ -9,7 +9,7 @@ source:
   sha256: 09d8135425e67242ad18bbda54843ba26aa0102893dfcfa0d0910cb496d7bf42
 
 build:
-  number: 0
+  number: 1
   skip: True  # [win and vc<14]
   run_exports:
     # stable within minor revisions: https://abi-laboratory.pro/tracker/timeline/krb5/
