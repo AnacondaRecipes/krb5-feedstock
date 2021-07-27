@@ -48,9 +48,6 @@ test:
     # Python 3.8 changed the default behavior of `ctypes.CDLL`, and it's more
     # expedient to add this constraint rather than rewrite the test script.
     - python <3.8   # [win]
-  commands:
-    - conda inspect linkages -p $PREFIX krb5  # [not win]
-    - conda inspect objects -p $PREFIX krb5  # [osx]
 
 about:
   home: http://web.mit.edu/kerberos/
