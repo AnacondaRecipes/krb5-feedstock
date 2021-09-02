@@ -32,7 +32,8 @@ requirements:
     - perl        # [win]
     - pkg-config  # [unix]
     - make        # [unix]
-    - python 3.7  # [not win]
+    - python 3.7  # [not (win or arm64)]
+    - python 3.8  # [arm64]
     - python      # [win]
   host:
     - libedit     # [unix]
@@ -44,7 +45,8 @@ requirements:
 test:
   requires:
     # without this the solver goes into a strange corner and returns python 2.0
-    - python 3.7.*  # [not win]
+    - python 3.7.*  # [not (win or arm64)]
+    - python 3.8.*  # [arm64]
     # Python 3.8 changed the default behavior of `ctypes.CDLL`, and it's more
     # expedient to add this constraint rather than rewrite the test script.
     - python <3.8   # [win]
