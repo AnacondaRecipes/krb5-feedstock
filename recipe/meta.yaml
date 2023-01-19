@@ -56,6 +56,10 @@ about:
   license: MIT
   license_file: doc/notice.rst
   summary: 'A network authentication protocol.'
+  description: |
+    Kerberos is a network authentication protocol. It is designed to provide strong authentication for client/server applications by using secret-key cryptography. 
+  doc_url: http://web.mit.edu/kerberos/krb5-1.19/doc/index.html
+  dev_url: https://kerberos.org/dist/index.html
 
 extra:
   recipe-maintainers:
