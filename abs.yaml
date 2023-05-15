@@ -1,0 +1,4 @@
+channels:
+  staging_openssl3: openssl3
+
+aggregate_branch: openssl3_builds
