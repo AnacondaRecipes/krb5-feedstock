@@ -33,12 +33,12 @@ requirements:
     - pkg-config  # [unix]
     - make        # [unix]
   host:
-    - libedit     # [unix]
-    - openssl 3.0.8    # [unix]
-    - tk
+    - libedit 3.1.20221030  # [unix]
+    - openssl 3.0.8  # [unix]
+    - tk 8.6.12
   run:
     - {{ pin_compatible('libedit') }}  # [unix]
-    - openssl >=3.0.8,<4.0a0
+    - openssl 3.*
 test:
   requires:
     - python 3.11
