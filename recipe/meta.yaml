@@ -9,7 +9,7 @@ source:
   sha256: ec3861c3bec29aa8da9281953c680edfdab1754d1b1db8761c1d824e4b25496a
 
 build:
-  number: 0
+  number: 1
   skip: True  # [win and vc<14]
   run_exports:
     # stable within minor revisions: https://abi-laboratory.pro/tracker/timeline/krb5/
@@ -34,11 +34,11 @@ requirements:
     - make        # [unix]
   host:
     - libedit 3.1.20221030  # [unix]
-    - openssl 3.0.8  # [unix]
+    - openssl {{ openssl }} # [unix]
     - tk 8.6.12
   run:
     - {{ pin_compatible('libedit') }}  # [unix]
-    - openssl 3.*
+    - openssl  # exact pin handled through openssl run_exports
 test:
   requires:
     - python 3.11
