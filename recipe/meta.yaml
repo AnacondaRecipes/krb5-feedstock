@@ -1,15 +1,16 @@
-{% set version = "1.20.1" %}
+{% set name = "krb5" %}
+{% set version = "1.21.3" %}
 
 package:
-  name: krb5
+  name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://github.com/krb5/krb5/archive/krb5-{{ version }}-final.tar.gz
-  sha256: ec3861c3bec29aa8da9281953c680edfdab1754d1b1db8761c1d824e4b25496a
+  url: https://github.com/krb5/{{ name }}/archive/{{ name }}-{{ version }}-final.tar.gz
+  sha256: 2157d92020d408ed63ebcd886a92d1346a1383b0f91123a0473b4f69b4a24861
 
 build:
-  number: 1
+  number: 0
   skip: True  # [win and vc<14]
   run_exports:
     # stable within minor revisions: https://abi-laboratory.pro/tracker/timeline/krb5/
@@ -46,13 +47,13 @@ test:
 about:
   home: https://web.mit.edu/kerberos/
   license: MIT
-  license_file: doc/notice.rst
   license_family: MIT
-  summary: 'A network authentication protocol.'
+  license_file: doc/notice.rst
+  summary: A network authentication protocol.
   description: |
     Kerberos is a network authentication protocol. It is designed to provide strong authentication for client/server applications by using secret-key cryptography. 
-  doc_url: https://web.mit.edu/kerberos/krb5-1.20/doc/index.html
-  dev_url: https://kerberos.org/dist/index.html
+  doc_url: https://web.mit.edu/kerberos/krb5-1.21/doc/index.html
+  dev_url: https://github.com/krb5/krb5
 
 extra:
   recipe-maintainers:
