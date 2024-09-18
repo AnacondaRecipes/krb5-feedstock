@@ -53,7 +53,7 @@ about:
   description: |
     Kerberos is a network authentication protocol. It is designed to provide strong authentication for client/server applications by using secret-key cryptography. 
   doc_url: https://web.mit.edu/kerberos/krb5-1.21/doc/index.html
-  dev_url: https://kerberos.org/dist/index.html
+  dev_url: https://github.com/krb5/krb5
 
 extra:
   recipe-maintainers:
