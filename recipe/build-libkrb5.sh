@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+set -e
 
 export CPPFLAGS="${CPPFLAGS/-DNDEBUG/} -I${PREFIX}/include"
 export LDFLAGS="${LDFLAGS} -L${PREFIX}/lib"
@@ -23,10 +23,5 @@ pushd src
               --with-tls-impl=openssl     \
               --without-system-verto
   make -j${CPU_COUNT} ${VERBOSE_AT}
-
-  # Turn off built-in test since they rely on network configurations we
-  # cannot guarantee on our CI systems.
-  #make check
-
   make install
-popd
+popd 

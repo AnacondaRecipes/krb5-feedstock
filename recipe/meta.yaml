@@ -1,3 +1,6 @@
+# Split package recipe for krb5
+# - libkrb5: Kerberos libraries and headers for development
+# - krb5: Kerberos utilities and executables
 {% set name = "krb5" %}
 {% set version = "1.21.3" %}
 
@@ -10,23 +13,14 @@ source:
   sha256: 2157d92020d408ed63ebcd886a92d1346a1383b0f91123a0473b4f69b4a24861
 
 build:
-  number: 1
+  number: 2
   skip: True  # [win and vc<14]
-  run_exports:
-    # stable within minor revisions: https://abi-laboratory.pro/tracker/timeline/krb5/
-    - {{ pin_subpackage('krb5', max_pin='x.x') }}
-  ignore_run_exports:
-    # C++ and Tcl are only needed for performing built-in unit tests.
-    - libcxx          # [osx]
-    - libstdcxx-ng    # [linux]
-    - tk
-  missing_dso_whitelist:          # [osx]
-    - /usr/lib/libresolv.9.dylib  # [osx]
 
 requirements:
   build:
-    - {{ stdlib('c') }}
+    - libtool  # [unix]
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - {{ compiler('cxx') }}
     - bison       # [not win]
     - autoconf    # [not win]
@@ -34,16 +28,139 @@ requirements:
     - perl        # [win]
     - pkg-config  # [unix]
     - make        # [unix]
+    - python *    # [not win]
+    - gettext
   host:
-    - libedit 3.1.20221030  # [unix]
+    - libedit {{ libedit}}  # [unix]
     - openssl {{ openssl }}
-    - tk 8.6.12
-  run:
-    - {{ pin_compatible('libedit') }}  # [unix]
+    - tk {{ tk }}
 
-test:
-  requires:
-    - python 3.11
+outputs:
+  - name: lib{{ name }}
+    script: build-libkrb5.sh   # [unix]
+    script: build-libkrb5.bat  # [win]
+    files:
+      # Libraries
+      - lib/lib*.so*           # [linux]
+      - lib/lib*.dylib         # [osx]
+      - lib/*.dll              # [win]
+      # Headers  
+      - include/**/*
+      # Development tools only
+      - bin/krb5-config        # [unix]
+      - bin/compile_et         # [unix]
+      # Package config files
+      - lib/pkgconfig/*.pc
+      # Plugin architecture
+      - lib/krb5/plugins/**/*
+      # Development support files
+      - share/et/**/*
+      - share/man/man1/krb5-config.1  # [unix]
+      - share/man/man1/compile_et.1   # [unix]
+    build:
+      run_exports:
+        - {{ pin_subpackage('libkrb5', max_pin='x.x') }}
+      ignore_run_exports:
+        # C++ and Tcl are only needed for performing built-in unit tests.
+        - libcxx          # [osx]
+        - libstdcxx-ng    # [linux]
+        - tk
+        # libedit is not used in the libraries, only in some utilities
+        - libedit         # [unix]
+      missing_dso_whitelist:          # [osx]
+        - /usr/lib/libresolv.9.dylib  # [osx]
+    requirements:
+      build:
+        - libtool  # [unix]
+        - {{ compiler('c') }}
+        - {{ stdlib("c") }}
+        - {{ compiler('cxx') }}
+        - bison       # [not win]
+        - autoconf    # [not win]
+        - posix       # [win]
+        - perl        # [win]
+        - pkg-config  # [unix]
+        - make        # [unix]
+        - python *    # [not win]
+        - gettext
+      host:
+        - libedit {{ libedit}}  # [unix]
+        - openssl {{ openssl }}
+        - tk {{ tk }}
+      run:
+    test:
+      commands:
+        - test -f $PREFIX/lib/libkrb5.so                    # [linux]
+        - test -f $PREFIX/lib/libkrb5.dylib                 # [osx]
+        - test -f $PREFIX/lib/libgssapi_krb5.so             # [linux]
+        - test -f $PREFIX/lib/libgssapi_krb5.dylib          # [osx]
+        - krb5-config --version
+        - test -f $PREFIX/bin/krb5-config                   # [unix]
+        - test ! -f $PREFIX/bin/kinit                       # [unix]
+        - test ! -f $PREFIX/bin/klist                       # [unix]
+
+  - name: {{ name }}
+    script: build-krb5.sh   # [unix]
+    script: build-krb5.bat  # [win]
+    files:
+      # User utilities
+      - bin/kinit              # [unix]
+      - bin/klist              # [unix] 
+      - bin/kdestroy           # [unix]
+      - bin/kpasswd            # [unix]
+      - bin/kswitch            # [unix]
+      - bin/ktutil             # [unix]
+      - bin/kvno               # [unix]
+      - bin/k5srvutil          # [unix]
+      - bin/kadmin             # [unix]
+      - bin/gss-client         # [unix]
+      - bin/sclient            # [unix]
+      - bin/sim_client         # [unix]
+      - bin/uuclient           # [unix]
+      # Server utilities
+      - sbin/kadmin.local      # [unix]
+      - sbin/kadmind           # [unix]
+      - sbin/kdb5_util         # [unix]
+      - sbin/kprop             # [unix]
+      - sbin/kpropd            # [unix]
+      - sbin/kproplog          # [unix]
+      - sbin/krb5kdc           # [unix]
+      - sbin/krb5-send-pr      # [unix]
+      - sbin/gss-server        # [unix]
+      - sbin/sim_server        # [unix]
+      - sbin/sserver           # [unix]
+      - sbin/uuserver          # [unix]
+      # Manual pages for utilities
+      - share/man/man1/kinit.1         # [unix]
+      - share/man/man1/klist.1         # [unix]
+      - share/man/man1/kdestroy.1      # [unix]
+      - share/man/man1/kpasswd.1       # [unix]
+      - share/man/man1/kswitch.1       # [unix]
+      - share/man/man1/ktutil.1        # [unix]
+      - share/man/man1/kvno.1          # [unix]
+      - share/man/man1/k5srvutil.1     # [unix]
+      - share/man/man1/kadmin.1        # [unix]
+      - share/man/man1/sclient.1       # [unix]
+      - share/man/man8/kadmin.local.8  # [unix]
+      - share/man/man8/kadmind.8       # [unix]
+      - share/man/man8/kdb5_util.8     # [unix]
+      - share/man/man8/kprop.8         # [unix]
+      - share/man/man8/kpropd.8        # [unix]
+      - share/man/man8/kproplog.8      # [unix]
+      - share/man/man8/krb5kdc.8       # [unix]
+      - share/man/man8/sserver.8       # [unix]
+    requirements:
+      run:
+        - {{ pin_subpackage('libkrb5', exact=True) }}
+        - libedit  # [unix]
+    test:
+      commands:
+        - kinit 2>&1 | grep -q "Usage:" || true       # [unix]
+        - klist 2>&1 | grep -q "Usage:" || true       # [unix]  
+        - test -f $PREFIX/bin/kdestroy                 # [unix]
+        - test -f $PREFIX/bin/kinit                    # [unix]
+        - test -f $PREFIX/bin/klist                    # [unix]
+        - test ! -f $PREFIX/bin/krb5-config            # [unix]
 
 about:
   home: https://web.mit.edu/kerberos/
