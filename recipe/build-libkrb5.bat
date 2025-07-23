@@ -19,6 +19,6 @@ if errorlevel 1 exit 1
 nmake NODEBUG=1
 if errorlevel 1 exit 1
 
-:: Copy headers, libs, executables.
+:: Install everything first (libkrb5 builds everything)
 nmake install NODEBUG=1
 if errorlevel 1 exit 1 
