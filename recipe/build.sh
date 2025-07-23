@@ -11,7 +11,7 @@ fi
 # https://github.com/conda-forge/bison-feedstock/issues/7
 export M4="${BUILD_PREFIX}/bin/m4"
 
-# Platform-specific configure options
+# Configure with standard options
 CONFIGURE_ARGS="--prefix=${PREFIX}
                --host=${HOST}
                --build=${BUILD}
@@ -28,11 +28,8 @@ CONFIGURE_ARGS="--prefix=${PREFIX}
                --enable-shared
                --disable-static
                --enable-dns-for-realm
-               --with-lmdb"
-
-# Disable LDAP support to avoid circular dependency with openldap
-# (openldap depends on krb5, creating a circular dependency)
-CONFIGURE_ARGS="${CONFIGURE_ARGS} --without-ldap"
+               --with-lmdb
+               --without-ldap"
 
 pushd src
   autoreconf -i

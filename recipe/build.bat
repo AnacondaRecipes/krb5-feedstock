@@ -21,7 +21,4 @@ if errorlevel 1 exit 1
 
 :: Install everything
 nmake install NODEBUG=1
-if errorlevel 1 exit 1
-
-:: libkrb5 and krb5 packages will be separated by conda-build files: sections
-:: Both packages build from the same source but get different files 
+if errorlevel 1 exit 1 

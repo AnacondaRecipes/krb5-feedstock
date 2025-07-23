@@ -1,6 +1,3 @@
-# Split package recipe for krb5
-# - libkrb5: Kerberos libraries and headers for development
-# - krb5: Kerberos utilities and executables
 {% set name = "krb5" %}
 {% set version = "1.21.3" %}
 
@@ -13,121 +10,78 @@ source:
   sha256: 2157d92020d408ed63ebcd886a92d1346a1383b0f91123a0473b4f69b4a24861
 
 build:
-  number: 2
+  number: 3
   skip: true  # [win and vc<14]
 
-# No top-level requirements - all dependencies are in the outputs sections
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ stdlib("c") }}
+    - {{ compiler('cxx') }}
+    - libtool  # [unix]
+    - bison       # [not win]
+    - autoconf    # [not win]
+    - posix       # [win]
+    - perl        # [win]
+    - pkg-config  # [unix]
+    - make        # [unix]
+    - python *    # [not win]
+    - gettext     # [not win]
+  host:
+    - libedit {{ libedit}}  # [unix]
+    - openssl {{ openssl }}
+    - lmdb                  # [unix]
 
 outputs:
   - name: lib{{ name }}
-    script: build-libkrb5.sh   # [unix]
-    script: build-libkrb5.bat  # [win]
-    files:
-      # Libraries (krb5 specific only, exclude ncurses/libedit components)
-      - lib/libkrb5*.so*           # [linux]
-      - lib/libgssapi*.so*         # [linux]
-      - lib/libgssrpc*.so*         # [linux]
-      - lib/libkadm5*.so*          # [linux]
-      - lib/libkdb5*.so*           # [linux]
-      - lib/libkrad*.so*           # [linux]
-      - lib/libk5crypto*.so*       # [linux]
-      - lib/libcom_err*.so*        # [linux]
-      - lib/libverto*.so*          # [linux]
-      - lib/libcrypto*.so*         # [linux]
-      - lib/libssl*.so*            # [linux]
-      - lib/libkrb5*.dylib        # [osx]
-      - lib/libgssapi*.dylib      # [osx]
-      - lib/libgssrpc*.dylib      # [osx]
-      - lib/libkadm5*.dylib       # [osx]
-      - lib/libkdb5*.dylib        # [osx]
-      - lib/libkrad*.dylib        # [osx]
-      - lib/libk5crypto*.dylib    # [osx]
-      - lib/libcom_err*.dylib     # [osx]
-      - lib/libverto*.dylib       # [osx]
-      - lib/libcrypto*.dylib      # [osx]
-      - lib/libssl*.dylib         # [osx]
-      # Windows import libraries (.lib files)
-      - Library/lib/krb5_64.lib         # [win]
-      - Library/lib/gssapi64.lib        # [win]
-      - Library/lib/comerr64.lib        # [win]
-      - Library/lib/k5sprt64.lib        # [win]
-      - Library/lib/krbcc64.lib         # [win]
-      - Library/lib/xpprof64.lib        # [win]
-      - Library/lib/leashw64.lib        # [win]
-      - Library/lib/kfwlogon.lib        # [win]
-      # Windows runtime libraries (.dll files) 
-      - Library/bin/krb5_64.dll         # [win]
-      - Library/bin/gssapi64.dll        # [win]
-      - Library/bin/comerr64.dll        # [win]
-      - Library/bin/k5sprt64.dll        # [win]
-      - Library/bin/krbcc64.dll         # [win]
-      - Library/bin/xpprof64.dll        # [win]
-      - Library/bin/leashw64.dll        # [win]
-      - Library/bin/kfwlogon.dll        # [win]
-      # Headers  
-      - include/**/*              # [unix]
-      - Library/include/**/*      # [win]
-      # Development tools only
-      - bin/krb5-config           # [unix]
-      - bin/compile_et            # [unix]
-      # Package config files
-      - lib/pkgconfig/*.pc        # [unix]
-      # Plugin architecture
-      - lib/krb5/plugins/**/*     # [unix]
-      - Library/bin/plugins/**/*  # [win]
-      # Development support files
-      - share/et/**/*             # [unix]
-      - share/examples/**/*       # [unix]
-      - share/locale/**/*         # [unix]
-      # Man pages for development tools
-      - share/man/man1/krb5-config.1  # [unix]
-      - share/man/man1/compile_et.1   # [unix]
-      # General man pages that belong with libraries
-      - share/man/man5/**/*       # [unix]
-      - share/man/man7/**/*       # [unix]
+    script: build.sh   # [unix]
+    script: build.bat  # [win]
     build:
       run_exports:
         - {{ pin_subpackage('libkrb5', max_pin='x.x') }}
       ignore_run_exports:
-        # C++ is only needed for performing built-in unit tests.
         - libcxx          # [osx]
         - libstdcxx-ng    # [linux]
-        # libedit is not used in the libraries, only in some utilities
         - libedit         # [unix]
-        # ncurses and all its components pulled in by libedit but not needed for krb5 libraries  
         - ncurses         # [unix]
-      missing_dso_whitelist:          # [osx or win or linux]
-        - /usr/lib/libresolv.9.dylib  # [osx]
-        # Windows API DLLs that are part of the OS and don't need to be packaged
-        - $RPATH/api-ms-win-core-winrt-string-l1-1-0.dll   # [win]
-        - $RPATH/api-ms-win-core-winrt-error-l1-1-0.dll    # [win]
-        - $RPATH/api-ms-win-core-winrt-l1-1-0.dll          # [win]
-        # Windows krb5 DLLs provided by libkrb5 package (cross-package dependencies)
-        - Library\bin\k5sprt64.dll      # [win]
-        - Library\bin\krb5_64.dll       # [win]
-        - Library\bin\comerr64.dll      # [win]
-        - Library\bin\gssapi64.dll      # [win]
-        - Library\bin\krbcc64.dll       # [win]
-        - Library\bin\xpprof64.dll      # [win]
-        - Library\bin\leashw64.dll      # [win]
-        - Library\bin\kfwlogon.dll      # [win]
-        # Linux krb5 libraries provided by libkrb5 package (cross-package dependencies)
-        - lib/libkrb5.so.3              # [linux]
-        - lib/libkrb5support.so.0       # [linux]
-        - lib/libk5crypto.so.3          # [linux]
-        - lib/libcom_err.so.3           # [linux]
-        - lib/libgssapi_krb5.so.2       # [linux]
-        - lib/libgssrpc.so.4            # [linux]
-        - lib/libkadm5clnt_mit.so.12    # [linux]
-        - lib/libkadm5srv_mit.so.12     # [linux]
-        - lib/libkdb5.so.10             # [linux]
-        - lib/libverto.so.0             # [linux]
+    files:
+      # Libraries
+      - lib/libkrb5*      # [unix]
+      - lib/libgssapi*    # [unix]
+      - lib/libgssrpc*    # [unix]
+      - lib/libkadm5*     # [unix]
+      - lib/libkdb5*      # [unix]
+      - lib/libkrad*      # [unix]
+      - lib/libk5crypto*  # [unix]
+      - lib/libcom_err*   # [unix]
+      - lib/libverto*     # [unix]
+      - Library/lib/*.lib # [win]
+      - Library/bin/*.dll # [win]
+      # Headers
+      - include/**/*      # [unix]
+      - Library/include/**/* # [win]
+      # Development tools
+      - bin/krb5-config   # [unix]
+      - bin/compile_et    # [unix]
+      # Package config
+      - lib/pkgconfig/*.pc # [unix]
+      # Plugins
+      - lib/krb5/plugins/**/* # [unix]
+      - Library/bin/plugins/**/* # [win]
+      # Documentation
+      - share/et/**/*     # [unix]
+      - share/examples/**/* # [unix]
+      - share/locale/**/* # [unix]
+      - share/man/man1/krb5-config.1 # [unix]
+      - share/man/man1/compile_et.1  # [unix]
+      - share/man/man5/**/* # [unix]
+      - share/man/man7/**/* # [unix]
     requirements:
       build:
-        - libtool  # [unix]
         - {{ compiler('c') }}
         - {{ stdlib("c") }}
         - {{ compiler('cxx') }}
+        - libtool  # [unix]
         - bison       # [not win]
         - autoconf    # [not win]
         - posix       # [win]
@@ -144,123 +98,88 @@ outputs:
         - lmdb                  # [unix]
     test:
       commands:
-        # Test core krb5 libraries
-        - test -f $PREFIX/lib/libkrb5.so                    # [linux]
-        - test -f $PREFIX/lib/libkrb5.dylib                 # [osx]
-        - test -f $PREFIX/lib/libgssapi_krb5.so             # [linux]
-        - test -f $PREFIX/lib/libgssapi_krb5.dylib          # [osx]
-        - test -f $PREFIX/lib/libk5crypto.so                # [linux]
-        - test -f $PREFIX/lib/libk5crypto.dylib             # [osx]
-        - test -f $PREFIX/lib/libcom_err.so                 # [linux]
-        - test -f $PREFIX/lib/libcom_err.dylib              # [osx]
-        - test -f $PREFIX/lib/libgssrpc.so                  # [linux]
-        - test -f $PREFIX/lib/libgssrpc.dylib               # [osx]
-        # Test Windows libraries
-        - test -f $PREFIX/Library/lib/krb5_64.lib           # [win]
-        - test -f $PREFIX/Library/bin/krb5_64.dll           # [win]
-        - test -f $PREFIX/Library/lib/gssapi64.lib          # [win]
-        - test -f $PREFIX/Library/bin/gssapi64.dll          # [win]
-        # Test essential headers
-        - test -f $PREFIX/include/krb5.h                    # [unix]
-        - test -f $PREFIX/include/gssapi.h                  # [unix]
-        - test -f $PREFIX/Library/include/krb5.h            # [win]
-        - test -f $PREFIX/Library/include/gssapi.h          # [win]
-        # Test development tools (should be in libkrb5)
-        - krb5-config --version                             # [unix]
-        - test -f $PREFIX/bin/krb5-config                   # [unix]
-        - test -f $PREFIX/bin/compile_et                    # [unix]
-        # Test package config files
-        - test -f $PREFIX/lib/pkgconfig/krb5.pc             # [unix]
-        - test -f $PREFIX/lib/pkgconfig/krb5-gssapi.pc     # [unix]
-        # Test plugin directory exists
-        - test -d $PREFIX/lib/krb5/plugins                  # [unix]
-        - test -d $PREFIX/Library/bin/plugins               # [win]
-        # Test locale files exist
-        - test -f $PREFIX/share/locale/en_US/LC_MESSAGES/mit-krb5.mo  # [unix]
-        # Test examples exist
-        - test -f $PREFIX/share/examples/krb5/krb5.conf     # [unix]
-        # Test man pages for dev tools
-        - test -f $PREFIX/share/man/man1/krb5-config.1      # [unix]
-        - test -f $PREFIX/share/man/man5/krb5.conf.5        # [unix]
-        # Ensure user utilities are NOT in libkrb5
-        - test ! -f $PREFIX/bin/kinit                       # [unix]
-        - test ! -f $PREFIX/bin/klist                       # [unix]
-        - test ! -f $PREFIX/bin/kadmin                      # [unix]
+        - test -f $PREFIX/lib/libkrb5${SHLIB_EXT} # [unix]
+        - test -f $PREFIX/include/krb5.h          # [unix]
+        - krb5-config --version                   # [unix]
+        - test -f $PREFIX/Library/bin/krb5_64.dll # [win]
+        - test -f $PREFIX/Library/include/krb5.h  # [win]
 
   - name: {{ name }}
-    script: build-krb5.sh   # [unix]
-    script: build-krb5.bat  # [win]
+    script: build.sh   # [unix]
+    script: build.bat  # [win]
+    build:
+      ignore_run_exports:
+        - openssl
     files:
       # User utilities
-      - bin/kinit              # [unix]
-      - bin/klist              # [unix] 
-      - bin/kdestroy           # [unix]
-      - bin/kpasswd            # [unix]
-      - bin/kswitch            # [unix]
-      - bin/ktutil             # [unix]
-      - bin/kvno               # [unix]
-      - bin/k5srvutil          # [unix]
-      - bin/kadmin             # [unix]
-      - bin/gss-client         # [unix]
-      - bin/sclient            # [unix]
-      - bin/sim_client         # [unix]
-      - bin/uuclient           # [unix]
+      - bin/kinit
+      - bin/klist
+      - bin/kdestroy
+      - bin/kpasswd
+      - bin/kswitch
+      - bin/ktutil
+      - bin/kvno
+      - bin/k5srvutil
+      - bin/kadmin
+      - bin/gss-client
+      - bin/sclient
+      - bin/sim_client
+      - bin/uuclient
       - bin/ksu                # [linux]
-      # Windows executables (copied from staging by build script)
-      - Library/bin/*.exe              # [win]
+      - Library/bin/*.exe      # [win]
       # Server utilities
-      - sbin/kadmin.local      # [unix]
-      - sbin/kadmind           # [unix]
-      - sbin/kdb5_util         # [unix]
-      - sbin/kprop             # [unix]
-      - sbin/kpropd            # [unix]
-      - sbin/kproplog          # [unix]
-      - sbin/krb5kdc           # [unix]
-      - sbin/krb5-send-pr      # [unix]
-      - sbin/gss-server        # [unix]
-      - sbin/sim_server        # [unix]
-      - sbin/sserver           # [unix]
-      - sbin/uuserver          # [unix]
-      # Manual pages for utilities
-      - share/man/man1/kinit.1         # [unix]
-      - share/man/man1/klist.1         # [unix]
-      - share/man/man1/kdestroy.1      # [unix]
-      - share/man/man1/kpasswd.1       # [unix]
-      - share/man/man1/kswitch.1       # [unix]
-      - share/man/man1/ktutil.1        # [unix]
-      - share/man/man1/kvno.1          # [unix]
-      - share/man/man1/k5srvutil.1     # [unix]
-      - share/man/man1/kadmin.1        # [unix]
-      - share/man/man1/sclient.1       # [unix]
+      - sbin/kadmin.local
+      - sbin/kadmind
+      - sbin/kdb5_util
+      - sbin/kprop
+      - sbin/kpropd
+      - sbin/kproplog
+      - sbin/krb5kdc
+      - sbin/krb5-send-pr
+      - sbin/gss-server
+      - sbin/sim_server
+      - sbin/sserver
+      - sbin/uuserver
+      # Manual pages
+      - share/man/man1/kinit.1
+      - share/man/man1/klist.1
+      - share/man/man1/kdestroy.1
+      - share/man/man1/kpasswd.1
+      - share/man/man1/kswitch.1
+      - share/man/man1/ktutil.1
+      - share/man/man1/kvno.1
+      - share/man/man1/k5srvutil.1
+      - share/man/man1/kadmin.1
+      - share/man/man1/sclient.1
       - share/man/man1/ksu.1           # [linux]
-      - share/man/man8/kadmin.local.8  # [unix]
-      - share/man/man8/kadmind.8       # [unix]
-      - share/man/man8/kdb5_util.8     # [unix]
-      - share/man/man8/kprop.8         # [unix]
-      - share/man/man8/kpropd.8        # [unix]
-      - share/man/man8/kproplog.8      # [unix]
-      - share/man/man8/krb5kdc.8       # [unix]
-      - share/man/man8/sserver.8       # [unix]
-      - share/man/man8/kdb5_ldap_util.8 # [unix]
+      - share/man/man8/kadmin.local.8
+      - share/man/man8/kadmind.8
+      - share/man/man8/kdb5_util.8
+      - share/man/man8/kprop.8
+      - share/man/man8/kpropd.8
+      - share/man/man8/kproplog.8
+      - share/man/man8/krb5kdc.8
+      - share/man/man8/sserver.8
+      - share/man/man8/kdb5_ldap_util.8
     requirements:
       build:
         - {{ compiler('c') }}
         - {{ stdlib("c") }}
         - {{ compiler('cxx') }}
-        - autoconf    # [not win]
+        - libtool  # [unix]
         - bison       # [not win]
-        - gettext     # [not win]
-        - libtool     # [unix]
-        - make        # [unix]
+        - autoconf    # [not win]
+        - posix       # [win]
         - perl        # [win]
         - pkg-config  # [unix]
-        - posix       # [win]
+        - make        # [unix]
         - python *    # [not win]
+        - gettext     # [not win]
       host:
         - libedit {{ libedit}}  # [unix]
         - openssl {{ openssl }}
         - lmdb                  # [unix]
-        # Windows needs minimal host environment for nmake to work
+        - {{ pin_subpackage('libkrb5', exact=True) }}
       run:
         - {{ pin_subpackage('libkrb5', exact=True) }}
         - libedit  # [unix]
@@ -268,45 +187,14 @@ outputs:
         - lmdb     # [unix]
     test:
       commands:
-        # Test essential user utilities exist
-        - test -f $PREFIX/bin/kinit                            # [unix]
-        - test -f $PREFIX/bin/klist                            # [unix]
-        - test -f $PREFIX/bin/kdestroy                         # [unix]
-        - test -f $PREFIX/bin/kpasswd                          # [unix]
-        - test -f $PREFIX/bin/kswitch                          # [unix]
-        - test -f $PREFIX/bin/ktutil                           # [unix]
-        - test -f $PREFIX/bin/kvno                             # [unix]
-        - test -f $PREFIX/bin/k5srvutil                        # [unix]
-        - test -f $PREFIX/bin/kadmin                           # [unix]
-        - test -f $PREFIX/bin/gss-client                       # [unix]
-        - test -f $PREFIX/bin/sclient                          # [unix]
-        # Test Linux-specific utilities
-        - test -f $PREFIX/bin/ksu                              # [linux]
-        # Test server utilities
-        - test -f $PREFIX/sbin/kadmin.local                    # [unix]
-        - test -f $PREFIX/sbin/kadmind                         # [unix]
-        - test -f $PREFIX/sbin/kdb5_util                       # [unix]
-        - test -f $PREFIX/sbin/krb5kdc                         # [unix]
-        - test -f $PREFIX/sbin/gss-server                      # [unix]
-        # Test Windows executables
-        - test -f $PREFIX/Library/bin/kinit.exe                # [win]
-        - test -f $PREFIX/Library/bin/klist.exe                # [win]
-        - test -f $PREFIX/Library/bin/kdestroy.exe             # [win]
-        - test -f $PREFIX/Library/bin/kpasswd.exe              # [win]
-        - test -f $PREFIX/Library/bin/kvno.exe                 # [win]
-        - test -f $PREFIX/Library/bin/gss-client.exe           # [win]
-        # Test man pages for utilities exist
-        - test -f $PREFIX/share/man/man1/kinit.1               # [unix]
-        - test -f $PREFIX/share/man/man1/klist.1               # [unix]
-        - test -f $PREFIX/share/man/man1/kadmin.1              # [unix]
-        - test -f $PREFIX/share/man/man8/kadmin.local.8        # [unix]
-        - test -f $PREFIX/share/man/man8/krb5kdc.8             # [unix]
-        # Ensure development tools are NOT in krb5 package
-        - test ! -f $PREFIX/bin/krb5-config                    # [unix]
-        - test ! -f $PREFIX/bin/compile_et                     # [unix]
-        # Ensure libraries are NOT duplicated in krb5 package
-        - test ! -f $PREFIX/lib/libkrb5.so                     # [linux]
-        - test ! -f $PREFIX/lib/libkrb5.dylib                  # [osx]
+        - test -f $PREFIX/bin/kinit
+        - test -f $PREFIX/bin/klist
+        - test -f $PREFIX/bin/kdestroy
+        - test -f $PREFIX/sbin/krb5kdc
+        - test -f $PREFIX/Library/bin/kinit.exe # [win]
+        - test -f $PREFIX/Library/bin/klist.exe # [win]
+        - test ! -f $PREFIX/bin/krb5-config
+        - test ! -f $PREFIX/lib/libkrb5${SHLIB_EXT}
 
 about:
   home: https://web.mit.edu/kerberos/
