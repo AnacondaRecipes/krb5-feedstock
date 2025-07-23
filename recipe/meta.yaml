@@ -5,7 +5,7 @@
 {% set version = "1.21.3" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name|lower }}-split
   version: {{ version }}
 
 source:
