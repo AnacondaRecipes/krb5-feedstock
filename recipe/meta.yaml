@@ -128,10 +128,8 @@ outputs:
       host:
         - libedit {{ libedit}}  # [unix]
         - openssl {{ openssl }}
-        - openldap              # [linux]
         - lmdb                  # [unix]
       run:
-        - openldap              # [linux]
         - lmdb                  # [unix]
     test:
       commands:
@@ -241,10 +239,6 @@ outputs:
         - lmdb     # [unix]
     test:
       commands:
-        # Test that utilities work (show usage when called incorrectly)
-        - kinit 2>&1 | grep -q "Usage:" || true                # [unix]
-        - klist 2>&1 | grep -q "Usage:" || true                # [unix]
-        - kadmin 2>&1 | grep -q "Usage:" || true               # [unix]
         # Test essential user utilities exist
         - test -f $PREFIX/bin/kinit                            # [unix]
         - test -f $PREFIX/bin/klist                            # [unix]

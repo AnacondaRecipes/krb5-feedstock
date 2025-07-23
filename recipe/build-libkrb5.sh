@@ -30,12 +30,9 @@ CONFIGURE_ARGS="--prefix=${PREFIX}
                --enable-dns-for-realm
                --with-lmdb"
 
-# Add LDAP support on Linux
-if [[ ${HOST} =~ .*linux.* ]]; then
-  CONFIGURE_ARGS="${CONFIGURE_ARGS} --with-ldap"
-else
-  CONFIGURE_ARGS="${CONFIGURE_ARGS} --without-ldap"
-fi
+# Disable LDAP support to avoid circular dependency with openldap
+# (openldap depends on krb5, creating a circular dependency)
+CONFIGURE_ARGS="${CONFIGURE_ARGS} --without-ldap"
 
 pushd src
   autoreconf -i
