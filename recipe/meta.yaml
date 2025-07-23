@@ -29,7 +29,7 @@ requirements:
     - pkg-config  # [unix]
     - make        # [unix]
     - python *    # [not win]
-    - gettext
+    - gettext     # [not win]
   host:
     - libedit {{ libedit}}  # [unix]
     - openssl {{ openssl }}
