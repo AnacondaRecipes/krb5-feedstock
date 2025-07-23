@@ -1,6 +1,26 @@
 {% set name = "krb5" %}
 {% set version = "1.21.3" %}
 
+# Platform-specific prefixes and suffixes
+{% set unix_prefix = "" %}  # [not win]
+{% set unix_suffix = "" %}  # [not win]
+{% set win_prefix = "Library/" %}  # [win]
+{% set win_suffix = ".exe" %}  # [win]
+
+# Define library names for cleaner templating
+{% set krb5_libs = ["krb5", "gssapi", "gssrpc", "kadm5", "kdb5", "krad", "k5crypto", "com_err", "verto"] %}
+{% set krb5_headers = ["krb5", "gssapi", "kadm5", "kdb5", "krad", "k5crypto"] %}
+{% set unix_prefix = "" %}  # [not win]
+{% set unix_suffix = "" %}  # [not win]
+{% set win_prefix = "Library/" %}  # [win]
+{% set win_suffix = ".exe" %}  # [win]
+
+# Define library names for cleaner templating
+{% set krb5_libs = ["krb5", "gssapi", "gssrpc", "kadm5", "kdb5", "krad", "k5crypto", "com_err", "verto"] %}
+{% set krb5_headers = ["krb5", "gssapi", "kadm5", "kdb5", "krad", "k5crypto"] %}
+{% set krb5_executables = ["kinit", "klist", "kdestroy", "kpasswd", "kswitch", "ktutil", "kvno", "k5srvutil", "kadmin", "gss-client", "sclient", "sim_client", "uuclient", "ksu", "krb5-config"] %}
+{% set krb5_server_executables = ["kadmin.local", "kadmind", "kdb5_util", "kprop", "kpropd", "kproplog", "krb5kdc", "krb5-send-pr", "gss-server", "sim_server", "sserver", "uuserver"] %}
+
 package:
   name: {{ name|lower }}-split
   version: {{ version }}
@@ -12,6 +32,10 @@ source:
 build:
   number: 3
   skip: true  # [win and vc<14]
+  missing_dso_whitelist:
+    - api-ms-win-core-winrt-string-l1-1-0.dll  # [win]
+    - api-ms-win-core-winrt-error-l1-1-0.dll   # [win]
+    - api-ms-win-core-winrt-l1-1-0.dll         # [win]
 
 requirements:
   build:
@@ -28,14 +52,14 @@ requirements:
     - python *    # [not win]
     - gettext     # [not win]
   host:
-    - libedit {{ libedit}}  # [unix]
-    - openssl {{ openssl }}
+    - libedit  # [unix]
+    - openssl
     - lmdb                  # [unix]
 
 outputs:
   - name: lib{{ name }}
     script: build.sh   # [unix]
-    script: build.bat  # [win]
+    script: bld.bat    # [win]
     build:
       run_exports:
         - {{ pin_subpackage('libkrb5', max_pin='x.x') }}
@@ -45,37 +69,65 @@ outputs:
         - libedit         # [unix]
         - ncurses         # [unix]
     files:
-      # Libraries
-      - lib/libkrb5*      # [unix]
-      - lib/libgssapi*    # [unix]
-      - lib/libgssrpc*    # [unix]
-      - lib/libkadm5*     # [unix]
-      - lib/libkdb5*      # [unix]
-      - lib/libkrad*      # [unix]
-      - lib/libk5crypto*  # [unix]
-      - lib/libcom_err*   # [unix]
-      - lib/libverto*     # [unix]
-      - Library/lib/*.lib # [win]
-      - Library/bin/*.dll # [win]
-      # Headers
-      - include/**/*      # [unix]
-      - Library/include/**/* # [win]
-      # Development tools
-      - bin/krb5-config   # [unix]
+      # Libraries - Unix
+      {% for lib in krb5_libs %}
+      - lib/lib{{ lib }}*      # [unix]
+      {% endfor %}
+      # Libraries - Windows
+      - {{ win_prefix }}lib/*.lib # [win]
+      {% for lib in krb5_libs %}
+      - {{ win_prefix }}bin/{{ lib }}*.dll # [win]
+      {% endfor %}
+      
+      # Headers - Unix
+      {% for header in krb5_headers %}
+      - include/{{ header }}/     # [unix]
+      {% endfor %}
+      - include/com_err.h # [unix]
+      - include/verto.h   # [unix]
+      - include/krb5.h    # [unix]
+      - include/gssapi.h  # [unix]
+      - include/gssapi_krb5.h # [unix]
+      - include/gssrpc.h  # [unix]
+      - include/kadm5.h   # [unix]
+      - include/kdb5.h    # [unix]
+      - include/krad.h    # [unix]
+      - include/k5crypto.h # [unix]
+      
+      # Headers - Windows
+      {% for header in krb5_headers %}
+      - {{ win_prefix }}include/{{ header }}/ # [win]
+      {% endfor %}
+      - {{ win_prefix }}include/com_err.h # [win]
+      - {{ win_prefix }}include/verto.h # [win]
+      - {{ win_prefix }}include/krb5.h # [win]
+      - {{ win_prefix }}include/gssapi.h # [win]
+      - {{ win_prefix }}include/gssapi_krb5.h # [win]
+      - {{ win_prefix }}include/gssrpc.h # [win]
+      - {{ win_prefix }}include/kadm5.h # [win]
+      - {{ win_prefix }}include/kdb5.h # [win]
+      - {{ win_prefix }}include/krad.h # [win]
+      - {{ win_prefix }}include/k5crypto.h # [win]
+      - {{ win_prefix }}include/verto.h # [win]
+      
+      # Development tools (only compile_et, krb5-config goes to krb5 package)
       - bin/compile_et    # [unix]
+      
       # Package config
       - lib/pkgconfig/*.pc # [unix]
+      
       # Plugins
       - lib/krb5/plugins/**/* # [unix]
-      - Library/bin/plugins/**/* # [win]
+      - {{ win_prefix }}bin/plugins/**/* # [win]
+      
       # Documentation
       - share/et/**/*     # [unix]
       - share/examples/**/* # [unix]
       - share/locale/**/* # [unix]
-      - share/man/man1/krb5-config.1 # [unix]
       - share/man/man1/compile_et.1  # [unix]
       - share/man/man5/**/* # [unix]
       - share/man/man7/**/* # [unix]
+      
     requirements:
       build:
         - {{ compiler('c') }}
@@ -91,8 +143,8 @@ outputs:
         - python *    # [not win]
         - gettext     # [not win]
       host:
-        - libedit {{ libedit}}  # [unix]
-        - openssl {{ openssl }}
+        - libedit  # [unix]
+        - openssl
         - lmdb                  # [unix]
       run:
         - lmdb                  # [unix]
@@ -100,67 +152,23 @@ outputs:
       commands:
         - test -f $PREFIX/lib/libkrb5${SHLIB_EXT} # [unix]
         - test -f $PREFIX/include/krb5.h          # [unix]
-        - krb5-config --version                   # [unix]
         - test -f $PREFIX/Library/bin/krb5_64.dll # [win]
         - test -f $PREFIX/Library/include/krb5.h  # [win]
 
   - name: {{ name }}
     script: build.sh   # [unix]
-    script: build.bat  # [win]
+    script: bld.bat    # [win]
+    script: move-files.py
     build:
       ignore_run_exports:
         - openssl
     files:
-      # User utilities
-      - bin/kinit
-      - bin/klist
-      - bin/kdestroy
-      - bin/kpasswd
-      - bin/kswitch
-      - bin/ktutil
-      - bin/kvno
-      - bin/k5srvutil
-      - bin/kadmin
-      - bin/gss-client
-      - bin/sclient
-      - bin/sim_client
-      - bin/uuclient
-      - bin/ksu                # [linux]
-      - Library/bin/*.exe      # [win]
-      # Server utilities
-      - sbin/kadmin.local
-      - sbin/kadmind
-      - sbin/kdb5_util
-      - sbin/kprop
-      - sbin/kpropd
-      - sbin/kproplog
-      - sbin/krb5kdc
-      - sbin/krb5-send-pr
-      - sbin/gss-server
-      - sbin/sim_server
-      - sbin/sserver
-      - sbin/uuserver
-      # Manual pages
-      - share/man/man1/kinit.1
-      - share/man/man1/klist.1
-      - share/man/man1/kdestroy.1
-      - share/man/man1/kpasswd.1
-      - share/man/man1/kswitch.1
-      - share/man/man1/ktutil.1
-      - share/man/man1/kvno.1
-      - share/man/man1/k5srvutil.1
-      - share/man/man1/kadmin.1
-      - share/man/man1/sclient.1
-      - share/man/man1/ksu.1           # [linux]
-      - share/man/man8/kadmin.local.8
-      - share/man/man8/kadmind.8
-      - share/man/man8/kdb5_util.8
-      - share/man/man8/kprop.8
-      - share/man/man8/kpropd.8
-      - share/man/man8/kproplog.8
-      - share/man/man8/krb5kdc.8
-      - share/man/man8/sserver.8
-      - share/man/man8/kdb5_ldap_util.8
+      # Files moved to staging by move-files.py
+      - staging/bin/
+      - staging/sbin/
+      - staging/share/man/
+      # Windows executables
+      - {{ win_prefix }}bin/*{{ win_suffix }}      # [win]
     requirements:
       build:
         - {{ compiler('c') }}
@@ -176,8 +184,8 @@ outputs:
         - python *    # [not win]
         - gettext     # [not win]
       host:
-        - libedit {{ libedit}}  # [unix]
-        - openssl {{ openssl }}
+        - libedit  # [unix]
+        - openssl
         - lmdb                  # [unix]
         - {{ pin_subpackage('libkrb5', exact=True) }}
       run:
@@ -187,12 +195,16 @@ outputs:
         - lmdb     # [unix]
     test:
       commands:
-        - test -f $PREFIX/bin/kinit
-        - test -f $PREFIX/bin/klist
-        - test -f $PREFIX/bin/kdestroy
-        - test -f $PREFIX/sbin/krb5kdc
+        # Test for key executables in staging
+        - test -f $PREFIX/staging/bin/kinit
+        - test -f $PREFIX/staging/bin/klist
+        - test -f $PREFIX/staging/bin/kdestroy
+        - test -f $PREFIX/staging/bin/krb5-config
+        - test -f $PREFIX/staging/sbin/krb5kdc
+        # Test for Windows executables
         - test -f $PREFIX/Library/bin/kinit.exe # [win]
         - test -f $PREFIX/Library/bin/klist.exe # [win]
+        # Verify files are not in wrong locations
         - test ! -f $PREFIX/bin/krb5-config
         - test ! -f $PREFIX/lib/libkrb5${SHLIB_EXT}
 
