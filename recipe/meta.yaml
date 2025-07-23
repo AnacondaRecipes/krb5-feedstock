@@ -200,21 +200,8 @@ outputs:
       - bin/sim_client         # [unix]
       - bin/uuclient           # [unix]
       - bin/ksu                # [linux]
-      # Windows executables
-      - Library/bin/kinit.exe           # [win]
-      - Library/bin/klist.exe           # [win]
-      - Library/bin/kdestroy.exe        # [win]
-      - Library/bin/kpasswd.exe         # [win]
-      - Library/bin/kswitch.exe         # [win]
-      - Library/bin/kvno.exe            # [win]
-      - Library/bin/gss-client.exe      # [win]
-      - Library/bin/gss-server.exe      # [win]
-      - Library/bin/kcpytkt.exe         # [win]
-      - Library/bin/kdeltkt.exe         # [win]
-      - Library/bin/kfwcpcc.exe         # [win]
-      - Library/bin/mit2ms.exe          # [win]
-      - Library/bin/ms2mit.exe          # [win]
-      - Library/bin/ccapiserver.exe     # [win]
+      # Windows executables (copied from staging by build script)
+      - Library/bin/*.exe              # [win]
       # Server utilities
       - sbin/kadmin.local      # [unix]
       - sbin/kadmind           # [unix]
