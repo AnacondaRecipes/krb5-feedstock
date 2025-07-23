@@ -24,7 +24,7 @@ requirements:
     - autoconf    # [not win]
     - bison       # [not win]
     - gettext     # [not win]
-    - libtool  # [unix]
+    - libtool     # [unix]
     - make        # [unix]
     - perl        # [win]
     - pkg-config  # [unix]
