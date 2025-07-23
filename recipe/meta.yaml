@@ -96,7 +96,7 @@ outputs:
         - libedit         # [unix]
         # ncurses and all its components pulled in by libedit but not needed for krb5 libraries  
         - ncurses         # [unix]
-      missing_dso_whitelist:          # [osx or win]
+      missing_dso_whitelist:          # [osx or win or linux]
         - /usr/lib/libresolv.9.dylib  # [osx]
         # Windows API DLLs that are part of the OS and don't need to be packaged
         - $RPATH/api-ms-win-core-winrt-string-l1-1-0.dll   # [win]
@@ -111,6 +111,17 @@ outputs:
         - Library\bin\xpprof64.dll      # [win]
         - Library\bin\leashw64.dll      # [win]
         - Library\bin\kfwlogon.dll      # [win]
+        # Linux krb5 libraries provided by libkrb5 package (cross-package dependencies)
+        - lib/libkrb5.so.3              # [linux]
+        - lib/libkrb5support.so.0       # [linux]
+        - lib/libk5crypto.so.3          # [linux]
+        - lib/libcom_err.so.3           # [linux]
+        - lib/libgssapi_krb5.so.2       # [linux]
+        - lib/libgssrpc.so.4            # [linux]
+        - lib/libkadm5clnt_mit.so.12    # [linux]
+        - lib/libkadm5srv_mit.so.12     # [linux]
+        - lib/libkdb5.so.10             # [linux]
+        - lib/libverto.so.0             # [linux]
     requirements:
       build:
         - libtool  # [unix]
