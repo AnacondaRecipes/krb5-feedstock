@@ -1,16 +1,28 @@
 @echo off
 
-REM Copy utility executables from shared location back to final location
-if not exist "%PREFIX%\krb5_utilities" (
-    echo ERROR: krb5 utilities directory not found! libkrb5 must be built first.
-    exit /b 1
-)
+set NO_LEASH=1
 
-echo Copying krb5 utilities to final location...
-copy "%PREFIX%\krb5_utilities\*.exe" "%LIBRARY_PREFIX%\bin\"
+:: Finds stdint.h from msinttypes.
+set INCLUDE=%LIBRARY_INC%;%INCLUDE%
+
+:: Set the install path
+set KRB_INSTALL_DIR=%LIBRARY_PREFIX%
+
+:: Need this set or libs/Makefile fails
+set VISUALSTUDIOVERSION=%VS_MAJOR%0
+
+cd src
+
+:: Create Makefile for Windows (reuse the prep step)
+nmake -f Makefile.in prep-windows
 if errorlevel 1 exit 1
 
-REM Clean up shared directory
-rmdir /s /q "%PREFIX%\krb5_utilities"
+:: Build only the utilities we need (not the full build)
+nmake NODEBUG=1
+if errorlevel 1 exit 1
 
-echo krb5 package build complete - utilities copied to Library/bin 
+:: Install everything, then we'll let conda-build's files: section handle separation
+nmake install NODEBUG=1
+if errorlevel 1 exit 1
+
+echo krb5 package build complete 
