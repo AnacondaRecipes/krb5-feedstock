@@ -18,18 +18,18 @@ build:
 
 requirements:
   build:
-    - libtool  # [unix]
     - {{ compiler('c') }}
     - {{ stdlib("c") }}
     - {{ compiler('cxx') }}
-    - bison       # [not win]
     - autoconf    # [not win]
-    - posix       # [win]
+    - bison       # [not win]
+    - gettext     # [not win]
+    - libtool  # [unix]
+    - make        # [unix]
     - perl        # [win]
     - pkg-config  # [unix]
-    - make        # [unix]
+    - posix       # [win]
     - python *    # [not win]
-    - gettext     # [not win]
   host:
     - libedit {{ libedit}}  # [unix]
     - openssl {{ openssl }}
