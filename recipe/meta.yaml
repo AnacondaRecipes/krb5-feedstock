@@ -249,6 +249,7 @@ outputs:
         - libedit {{ libedit}}  # [unix]
         - openssl {{ openssl }}
         - lmdb                  # [unix]
+        # Windows needs minimal host environment for nmake to work
       run:
         - {{ pin_subpackage('libkrb5', exact=True) }}
         - libedit  # [unix]
