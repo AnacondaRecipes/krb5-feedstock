@@ -16,25 +16,7 @@ build:
   number: 2
   skip: true  # [win and vc<14]
 
-requirements:
-  build:
-    - {{ compiler('c') }}
-    - {{ stdlib("c") }}
-    - {{ compiler('cxx') }}
-    - autoconf    # [not win]
-    - bison       # [not win]
-    - gettext     # [not win]
-    - libtool     # [unix]
-    - make        # [unix]
-    - perl        # [win]
-    - pkg-config  # [unix]
-    - posix       # [win]
-    - python *    # [not win]
-  host:
-    - libedit {{ libedit}}  # [unix]
-    - openssl {{ openssl }}
-    - openldap              # [linux]
-    - lmdb                  # [unix]
+# No top-level requirements - all dependencies are in the outputs sections
 
 outputs:
   - name: lib{{ name }}
