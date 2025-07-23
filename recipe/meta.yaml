@@ -14,7 +14,7 @@ source:
 
 build:
   number: 2
-  skip: True  # [win and vc<14]
+  skip: true  # [win and vc<14]
 
 requirements:
   build:
@@ -33,7 +33,6 @@ requirements:
   host:
     - libedit {{ libedit}}  # [unix]
     - openssl {{ openssl }}
-    - tk {{ tk }}
 
 outputs:
   - name: lib{{ name }}
@@ -61,12 +60,13 @@ outputs:
       run_exports:
         - {{ pin_subpackage('libkrb5', max_pin='x.x') }}
       ignore_run_exports:
-        # C++ and Tcl are only needed for performing built-in unit tests.
+        # C++ is only needed for performing built-in unit tests.
         - libcxx          # [osx]
         - libstdcxx-ng    # [linux]
-        - tk
         # libedit is not used in the libraries, only in some utilities
         - libedit         # [unix]
+        # ncurses pulled in by libedit but not needed for krb5 libraries  
+        - ncurses         # [linux]
       missing_dso_whitelist:          # [osx]
         - /usr/lib/libresolv.9.dylib  # [osx]
     requirements:
@@ -86,7 +86,6 @@ outputs:
       host:
         - libedit {{ libedit}}  # [unix]
         - openssl {{ openssl }}
-        - tk {{ tk }}
       run:
     test:
       commands:
