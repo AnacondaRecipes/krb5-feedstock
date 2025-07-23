@@ -99,9 +99,9 @@ outputs:
       missing_dso_whitelist:          # [osx or win]
         - /usr/lib/libresolv.9.dylib  # [osx]
         # Windows API DLLs that are part of the OS and don't need to be packaged
-        - api-ms-win-core-winrt-string-l1-1-0.dll   # [win]
-        - api-ms-win-core-winrt-error-l1-1-0.dll    # [win]
-        - api-ms-win-core-winrt-l1-1-0.dll          # [win]
+        - $RPATH/api-ms-win-core-winrt-string-l1-1-0.dll   # [win]
+        - $RPATH/api-ms-win-core-winrt-error-l1-1-0.dll    # [win]
+        - $RPATH/api-ms-win-core-winrt-l1-1-0.dll          # [win]
     requirements:
       build:
         - libtool  # [unix]
