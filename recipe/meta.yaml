@@ -39,10 +39,30 @@ outputs:
     script: build-libkrb5.sh   # [unix]
     script: build-libkrb5.bat  # [win]
     files:
-      # Libraries
-      - lib/lib*.so*           # [linux]
-      - lib/lib*.dylib         # [osx]
-      - lib/*.dll              # [win]
+      # Libraries (krb5 specific only, exclude ncurses/libedit components)
+      - lib/libkrb5*.so*           # [linux]
+      - lib/libgssapi*.so*         # [linux]
+      - lib/libgssrpc*.so*         # [linux]
+      - lib/libkadm5*.so*          # [linux]
+      - lib/libkdb5*.so*           # [linux]
+      - lib/libkrad*.so*           # [linux]
+      - lib/libk5crypto*.so*       # [linux]
+      - lib/libcom_err*.so*        # [linux]
+      - lib/libverto*.so*          # [linux]
+      - lib/libcrypto*.so*         # [linux]
+      - lib/libssl*.so*            # [linux]
+      - lib/libkrb5*.dylib        # [osx]
+      - lib/libgssapi*.dylib      # [osx]
+      - lib/libgssrpc*.dylib      # [osx]
+      - lib/libkadm5*.dylib       # [osx]
+      - lib/libkdb5*.dylib        # [osx]
+      - lib/libkrad*.dylib        # [osx]
+      - lib/libk5crypto*.dylib    # [osx]
+      - lib/libcom_err*.dylib     # [osx]
+      - lib/libverto*.dylib       # [osx]
+      - lib/libcrypto*.dylib      # [osx]
+      - lib/libssl*.dylib         # [osx]
+      - lib/*.dll                 # [win]
       # Headers  
       - include/**/*
       # Development tools only
@@ -65,8 +85,8 @@ outputs:
         - libstdcxx-ng    # [linux]
         # libedit is not used in the libraries, only in some utilities
         - libedit         # [unix]
-        # ncurses pulled in by libedit but not needed for krb5 libraries  
-        - ncurses         # [linux]
+        # ncurses and all its components pulled in by libedit but not needed for krb5 libraries  
+        - ncurses         # [unix]
       missing_dso_whitelist:          # [osx]
         - /usr/lib/libresolv.9.dylib  # [osx]
     requirements:
