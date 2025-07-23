@@ -232,6 +232,23 @@ outputs:
       - share/man/man8/sserver.8       # [unix]
       - share/man/man8/kdb5_ldap_util.8 # [unix]
     requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ stdlib("c") }}
+        - {{ compiler('cxx') }}
+        - autoconf    # [not win]
+        - bison       # [not win]
+        - gettext     # [not win]
+        - libtool     # [unix]
+        - make        # [unix]
+        - perl        # [win]
+        - pkg-config  # [unix]
+        - posix       # [win]
+        - python *    # [not win]
+      host:
+        - libedit {{ libedit}}  # [unix]
+        - openssl {{ openssl }}
+        - lmdb                  # [unix]
       run:
         - {{ pin_subpackage('libkrb5', exact=True) }}
         - libedit  # [unix]
