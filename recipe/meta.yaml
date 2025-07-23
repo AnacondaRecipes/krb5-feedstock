@@ -33,6 +33,8 @@ requirements:
   host:
     - libedit {{ libedit}}  # [unix]
     - openssl {{ openssl }}
+    - openldap              # [linux]
+    - lmdb                  # [unix]
 
 outputs:
   - name: lib{{ name }}
@@ -118,6 +120,15 @@ outputs:
         - $RPATH/api-ms-win-core-winrt-string-l1-1-0.dll   # [win]
         - $RPATH/api-ms-win-core-winrt-error-l1-1-0.dll    # [win]
         - $RPATH/api-ms-win-core-winrt-l1-1-0.dll          # [win]
+        # Windows krb5 DLLs provided by libkrb5 package (cross-package dependencies)
+        - Library\bin\k5sprt64.dll      # [win]
+        - Library\bin\krb5_64.dll       # [win]
+        - Library\bin\comerr64.dll      # [win]
+        - Library\bin\gssapi64.dll      # [win]
+        - Library\bin\krbcc64.dll       # [win]
+        - Library\bin\xpprof64.dll      # [win]
+        - Library\bin\leashw64.dll      # [win]
+        - Library\bin\kfwlogon.dll      # [win]
     requirements:
       build:
         - libtool  # [unix]
@@ -135,7 +146,11 @@ outputs:
       host:
         - libedit {{ libedit}}  # [unix]
         - openssl {{ openssl }}
+        - openldap              # [linux]
+        - lmdb                  # [unix]
       run:
+        - openldap              # [linux]
+        - lmdb                  # [unix]
     test:
       commands:
         # Test core krb5 libraries
@@ -240,6 +255,8 @@ outputs:
       run:
         - {{ pin_subpackage('libkrb5', exact=True) }}
         - libedit  # [unix]
+        - openldap # [linux]
+        - lmdb     # [unix]
     test:
       commands:
         # Test that utilities work (show usage when called incorrectly)

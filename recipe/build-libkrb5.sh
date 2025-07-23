@@ -11,17 +11,35 @@ fi
 # https://github.com/conda-forge/bison-feedstock/issues/7
 export M4="${BUILD_PREFIX}/bin/m4"
 
+# Platform-specific configure options
+CONFIGURE_ARGS="--prefix=${PREFIX}
+               --host=${HOST}
+               --build=${BUILD}
+               --sysconfdir=${PREFIX}/etc
+               --localstatedir=${PREFIX}/var
+               --runstatedir=${PREFIX}/var/run
+               --without-tcl
+               --without-readline
+               --with-libedit
+               --with-crypto-impl=openssl
+               --with-tls-impl=openssl
+               --without-system-verto
+               --disable-rpath
+               --enable-shared
+               --disable-static
+               --enable-dns-for-realm
+               --with-lmdb"
+
+# Add LDAP support on Linux
+if [[ ${HOST} =~ .*linux.* ]]; then
+  CONFIGURE_ARGS="${CONFIGURE_ARGS} --with-ldap"
+else
+  CONFIGURE_ARGS="${CONFIGURE_ARGS} --without-ldap"
+fi
+
 pushd src
   autoreconf -i
-  ./configure --prefix=${PREFIX}          \
-              --host=${HOST}              \
-              --build=${BUILD}            \
-              --without-tcl               \
-              --without-readline          \
-              --with-libedit              \
-              --with-crypto-impl=openssl  \
-              --with-tls-impl=openssl     \
-              --without-system-verto
+  ./configure ${CONFIGURE_ARGS}
   make -j${CPU_COUNT} ${VERBOSE_AT}
   make install
 popd 
