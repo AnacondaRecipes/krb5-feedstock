@@ -81,8 +81,10 @@ outputs:
       - {{ win_prefix }}bin/kdb5*.dll # [win]
       - {{ win_prefix }}bin/krad*.dll # [win]
       - {{ win_prefix }}bin/k5crypto*.dll # [win]
-      - {{ win_prefix }}bin/com_err*.dll # [win]
+      - {{ win_prefix }}bin/comerr*.dll # [win]
+      - {{ win_prefix }}bin/k5sprt*.dll # [win]
       - {{ win_prefix }}bin/verto*.dll # [win]
+      - {{ win_prefix }}bin/xpprof*.dll # [win]
       
       # Headers - Unix
       - include/     # [unix]
