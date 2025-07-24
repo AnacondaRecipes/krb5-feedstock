@@ -127,8 +127,8 @@ outputs:
       commands:
         - test -f $PREFIX/lib/libkrb5${SHLIB_EXT} # [unix]
         - test -f $PREFIX/include/krb5.h          # [unix]
-        - test -f $PREFIX/Library/bin/krb5_64.dll # [win]
-        - test -f $PREFIX/Library/include/krb5.h  # [win]
+        - if exist "%PREFIX%\\Library\\bin\\krb5_64.dll" (exit 0) else (exit 1) # [win]
+        - if exist "%PREFIX%\\Library\\include\\krb5.h" (exit 0) else (exit 1) # [win]
 
   - name: {{ name }}
     script: build-krb5-split.sh   # [unix]
