@@ -2,9 +2,6 @@
 setlocal enabledelayedexpansion
 
 echo === BUILDING KRB5 WINDOWS ===
-echo PREFIX: %LIBRARY_PREFIX%
-echo BUILD_PREFIX: %BUILD_PREFIX%
-echo HOST: %HOST%
 
 REM Always build everything - the file patterns in meta.yaml will determine what gets packaged
 echo === BUILDING KRB5 (ALL COMPONENTS) ===

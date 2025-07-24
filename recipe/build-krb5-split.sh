@@ -5,10 +5,6 @@ set -e
 echo "=== BUILDING KRB5 (ALL COMPONENTS) ==="
 
 echo "=== BUILDING KRB5 ==="
-echo "PREFIX: ${PREFIX}"
-echo "BUILD_PREFIX: ${BUILD_PREFIX}"
-echo "HOST: ${HOST}"
-echo "CPU_COUNT: ${CPU_COUNT:-1}"
 
 # Set up environment variables
 export CPPFLAGS="${CPPFLAGS/-DNDEBUG/} -I${PREFIX}/include"
