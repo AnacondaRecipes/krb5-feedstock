@@ -49,18 +49,52 @@ if errorlevel 1 (
 
 echo === VERIFICATION ===
 echo Checking critical installed files:
-set CRITICAL_FILES=kinit.exe klist.exe krb5-config.exe krb5_64.dll krb5.h
 set ERROR_COUNT=0
 
-for %%f in (%CRITICAL_FILES%) do (
-    if exist "%LIBRARY_PREFIX%\Library\bin\%%f" (
-        echo ✓ %%f found in Library/bin/
-    ) else if exist "%LIBRARY_PREFIX%\Library\include\%%f" (
-        echo ✓ %%f found in Library/include/
-    ) else (
-        echo ✗ ERROR: %%f not found
-        set /a ERROR_COUNT+=1
-    )
+REM Check for executables
+if exist "%LIBRARY_PREFIX%\Library\bin\kinit.exe" (
+    echo ✓ kinit.exe found in Library/bin/
+) else (
+    echo ✗ ERROR: kinit.exe not found
+    set /a ERROR_COUNT+=1
+)
+
+if exist "%LIBRARY_PREFIX%\Library\bin\klist.exe" (
+    echo ✓ klist.exe found in Library/bin/
+) else (
+    echo ✗ ERROR: klist.exe not found
+    set /a ERROR_COUNT+=1
+)
+
+REM Check for additional executables that should be built
+if exist "%LIBRARY_PREFIX%\Library\bin\kpasswd.exe" (
+    echo ✓ kpasswd.exe found in Library/bin/
+) else (
+    echo ✗ ERROR: kpasswd.exe not found
+    set /a ERROR_COUNT+=1
+)
+
+if exist "%LIBRARY_PREFIX%\Library\bin\kswitch.exe" (
+    echo ✓ kswitch.exe found in Library/bin/
+) else (
+    echo ✗ ERROR: kswitch.exe not found
+    set /a ERROR_COUNT+=1
+)
+
+REM Check for DLLs
+if exist "%LIBRARY_PREFIX%\Library\bin\krb5_64.dll" (
+    echo ✓ krb5_64.dll found in Library/bin/
+) else (
+    echo ✗ ERROR: krb5_64.dll not found
+    set /a ERROR_COUNT+=1
+)
+
+REM Check for headers
+if exist "%LIBRARY_PREFIX%\Library\include\krb5.h" (
+    echo ✓ krb5.h found in Library/include/
+) else (
+    echo ✗ ERROR: krb5.h not found
+    set /a ERROR_COUNT+=1
 )
 
 if %ERROR_COUNT% GTR 0 (
