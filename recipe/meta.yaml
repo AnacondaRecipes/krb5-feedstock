@@ -2,10 +2,10 @@
 {% set version = "1.21.3" %}
 
 # Platform-specific prefixes and suffixes
-{% set unix_prefix = "" %}  # [not win]
-{% set unix_suffix = "" %}  # [not win]
-{% set win_prefix = "Library/" %}  # [win]
-{% set win_suffix = ".exe" %}  # [win]
+{% set unix_prefix = "" %}
+{% set unix_suffix = "" %}
+{% set win_prefix = "Library/" %}
+{% set win_suffix = ".exe" %}
 
 # Define library names for cleaner templating
 {% set krb5_libs = ["krb5", "gssapi", "gssrpc", "kadm5", "kdb5", "krad", "k5crypto", "com_err", "verto"] %}
@@ -47,8 +47,8 @@ requirements:
 
 outputs:
   - name: lib{{ name }}
-    script: build.sh   # [unix]
-    script: bld.bat    # [win]
+    script: build-krb5-split.sh   # [unix]
+    script: build-krb5-split.bat  # [win]
     build:
       run_exports:
         - {{ pin_subpackage('libkrb5', max_pin='x.x') }}
@@ -94,6 +94,12 @@ outputs:
       - {{ win_prefix }}bin/compile_et.exe # [win]
       
     requirements:
+      build:
+        - autoconf    # [not win]
+        - bison       # [not win]
+        - libtool     # [unix]
+        - pkg-config  # [unix]
+        - make        # [unix]
       host:
         - libedit  # [unix]
         - openssl
@@ -108,8 +114,8 @@ outputs:
         - test -f $PREFIX/Library/include/krb5.h  # [win]
 
   - name: {{ name }}
-    script: build.sh   # [unix]
-    script: bld.bat    # [win]
+    script: build-krb5-split.sh   # [unix]
+    script: build-krb5-split.bat  # [win]
     build:
       ignore_run_exports:
         - openssl
@@ -194,10 +200,17 @@ outputs:
       - {{ win_prefix }}bin/sserver{{ win_suffix }}
       - {{ win_prefix }}bin/uuserver{{ win_suffix }}
     requirements:
+      build:
+        - autoconf    # [not win]
+        - bison       # [not win]
+        - libtool     # [unix]
+        - pkg-config  # [unix]
+        - make        # [unix]
       host:
         - libedit  # [unix]
         - openssl
         - lmdb                  # [unix]
+        - openldap # [linux]
         - {{ pin_subpackage('libkrb5', exact=True) }}
       run:
         - {{ pin_subpackage('libkrb5', exact=True) }}
