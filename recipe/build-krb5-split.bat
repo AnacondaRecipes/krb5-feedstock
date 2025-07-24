@@ -24,6 +24,9 @@ set KRB_INSTALL_DIR=%LIBRARY_PREFIX%
 REM Need this set or libs/Makefile fails
 set VISUALSTUDIOVERSION=%VS_MAJOR%0
 
+REM Set environment variables like conda-forge
+set KRB_INSTALL_DIR=%LIBRARY_PREFIX%
+
 cd src
 
 echo === CREATING MAKEFILE FOR WINDOWS ===

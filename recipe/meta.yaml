@@ -35,7 +35,7 @@ requirements:
     - libtool  # [unix]
     - bison       # [not win]
     - autoconf    # [not win]
-    - posix       # [win]
+    - msys2-posix       # [win]
     - perl        # [win]
     - pkg-config  # [unix]
     - make        # [unix]
@@ -99,12 +99,16 @@ outputs:
         - {{ stdlib("c") }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - autoconf    # [not win]
+        - libtool  # [unix]
         - bison       # [not win]
-        - libtool     # [unix]
+        - autoconf    # [not win]
+        - msys2-posix       # [win]
+        - perl        # [win]
         - pkg-config  # [unix]
         - make        # [unix]
-        - msys2-gawk     # [win]
+        - python *    # [not win]
+        - gettext     # [not win]
+        - msys2-gawk    # [win]
       host:
         - libedit  # [unix]
         - openssl
@@ -210,12 +214,16 @@ outputs:
         - {{ stdlib("c") }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - autoconf    # [not win]
+        - libtool  # [unix]
         - bison       # [not win]
-        - libtool     # [unix]
+        - autoconf    # [not win]
+        - msys2-posix       # [win]
+        - perl        # [win]
         - pkg-config  # [unix]
         - make        # [unix]
-        - msys2-gawk     # [win]
+        - python *    # [not win]
+        - gettext     # [not win]
+        - msys2-gawk    # [win]
       host:
         - libedit  # [unix]
         - openssl
