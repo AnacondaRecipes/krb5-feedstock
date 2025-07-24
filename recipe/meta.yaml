@@ -20,7 +20,7 @@ source:
   sha256: 2157d92020d408ed63ebcd886a92d1346a1383b0f91123a0473b4f69b4a24861
 
 build:
-  number: 6
+  number: 2
   skip: true  # [win and vc<14]
   missing_dso_whitelist:
     - api-ms-win-core-winrt-string-l1-1-0.dll  # [win]
