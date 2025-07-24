@@ -29,6 +29,7 @@ build:
 
 requirements:
   build:
+    - {{ stdlib("c") }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - libtool  # [unix]
@@ -94,6 +95,9 @@ outputs:
       
     requirements:
       build:
+        - {{ stdlib("c") }}
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
         - autoconf    # [not win]
         - bison       # [not win]
         - libtool     # [unix]
@@ -201,6 +205,9 @@ outputs:
       - {{ win_prefix }}bin/uuserver{{ win_suffix }}
     requirements:
       build:
+        - {{ stdlib("c") }}
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
         - autoconf    # [not win]
         - bison       # [not win]
         - libtool     # [unix]
