@@ -85,6 +85,10 @@ outputs:
       - {{ win_prefix }}bin/k5sprt*.dll # [win]
       - {{ win_prefix }}bin/verto*.dll # [win]
       - {{ win_prefix }}bin/xpprof*.dll # [win]
+      - {{ win_prefix }}bin/kfwlogon*.dll # [win]
+      - {{ win_prefix }}bin/krbcc*.dll # [win]
+      - {{ win_prefix }}bin/leashw*.dll # [win]
+      - {{ win_prefix }}bin/plugins/preauth/spake*.dll # [win]
       
       # Headers - Unix
       - include/     # [unix]
@@ -211,6 +215,12 @@ outputs:
       - {{ win_prefix }}bin/sim_server{{ win_suffix }}
       - {{ win_prefix }}bin/sserver{{ win_suffix }}
       - {{ win_prefix }}bin/uuserver{{ win_suffix }}
+      - {{ win_prefix }}bin/ccapiserver{{ win_suffix }}
+      - {{ win_prefix }}bin/kcpytkt{{ win_suffix }}
+      - {{ win_prefix }}bin/kdeltkt{{ win_suffix }}
+      - {{ win_prefix }}bin/kfwcpcc{{ win_suffix }}
+      - {{ win_prefix }}bin/mit2ms{{ win_suffix }}
+      - {{ win_prefix }}bin/ms2mit{{ win_suffix }}
     requirements:
       build:
         - {{ stdlib("c") }}
