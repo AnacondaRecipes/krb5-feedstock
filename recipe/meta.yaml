@@ -60,6 +60,7 @@ outputs:
         - libedit         # [unix]
         - ncurses         # [unix]
         - lmdb            # [unix]
+        - openssl         # [win]
     files:
       # Libraries - Unix (only krb5 libraries, not executables)
       - lib/libkrb5*          # [unix]

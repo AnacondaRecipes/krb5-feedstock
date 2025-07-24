@@ -23,6 +23,10 @@ set VISUALSTUDIOVERSION=%VS_MAJOR%0
 REM Set environment variables like conda-forge
 set KRB_INSTALL_DIR=%LIBRARY_PREFIX%
 
+REM Fix perl locale warnings
+set LC_ALL=C
+set LANG=C
+
 cd src
 
 echo === CREATING MAKEFILE FOR WINDOWS ===
