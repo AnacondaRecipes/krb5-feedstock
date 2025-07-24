@@ -41,6 +41,7 @@ requirements:
     - make        # [unix]
     - python *    # [not win]
     - gettext     # [not win]
+    - msys2-gawk    # [win]
   host:
     - libedit  # [unix]
     - openssl
@@ -103,6 +104,7 @@ outputs:
         - libtool     # [unix]
         - pkg-config  # [unix]
         - make        # [unix]
+        - msys2-gawk     # [win]
       host:
         - libedit  # [unix]
         - openssl
@@ -213,6 +215,7 @@ outputs:
         - libtool     # [unix]
         - pkg-config  # [unix]
         - make        # [unix]
+        - msys2-gawk     # [win]
       host:
         - libedit  # [unix]
         - openssl

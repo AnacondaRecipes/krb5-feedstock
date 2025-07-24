@@ -1,12 +1,8 @@
 #!/bin/bash
 set -e
 
-# Check if this is the second package (krb5) - if so, skip build
-if [[ -f "${PREFIX}/lib/libkrb5.dylib" ]] || [[ -f "${PREFIX}/lib/libkrb5.so" ]]; then
-    echo "=== SKIPPING BUILD - FILES ALREADY EXIST ==="
-    echo "This appears to be the second package build. Files already exist."
-    exit 0
-fi
+# Always build everything - the file patterns in meta.yaml will determine what gets packaged
+echo "=== BUILDING KRB5 (ALL COMPONENTS) ==="
 
 echo "=== BUILDING KRB5 ==="
 echo "PREFIX: ${PREFIX}"
