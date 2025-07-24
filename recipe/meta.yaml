@@ -23,29 +23,29 @@ build:
   number: 2
   skip: true  # [win and vc<14]
   missing_dso_whitelist:
-    - api-ms-win-core-winrt-string-l1-1-0.dll  # [win]
     - api-ms-win-core-winrt-error-l1-1-0.dll   # [win]
     - api-ms-win-core-winrt-l1-1-0.dll         # [win]
+    - api-ms-win-core-winrt-string-l1-1-0.dll  # [win]
 
 requirements:
   build:
     - {{ stdlib("c") }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - libtool  # [unix]
-    - bison       # [not win]
-    - autoconf    # [not win]
-    - msys2-posix       # [win]
-    - perl        # [win]
-    - pkg-config  # [unix]
-    - make        # [unix]
-    - python *    # [not win]
-    - gettext     # [not win]
-    - msys2-gawk    # [win]
+    - autoconf     # [not win]
+    - bison        # [not win]
+    - gettext      # [not win]
+    - libtool      # [unix]
+    - make         # [unix]
+    - msys2-gawk   # [win]
+    - msys2-posix  # [win]
+    - perl         # [win]
+    - pkg-config   # [unix]
+    - python *     # [not win]
   host:
-    - libedit  # [unix]
+    - libedit      # [unix]
+    - lmdb         # [unix]
     - openssl
-    - lmdb                  # [unix]
 
 outputs:
   - name: lib{{ name }}
@@ -56,206 +56,211 @@ outputs:
         - {{ pin_subpackage('libkrb5', max_pin='x.x') }}
       ignore_run_exports:
         - libcxx          # [osx]
-        - libstdcxx-ng    # [linux]
         - libedit         # [unix]
-        - ncurses         # [unix]
+        - libstdcxx-ng    # [linux]
         - lmdb            # [unix]
+        - ncurses         # [unix]
         - openssl         # [win]
     files:
       # Libraries - Unix (only krb5 libraries, not executables)
-      - lib/libkrb5*          # [unix]
+      - lib/libcom_err*       # [unix]
       - lib/libgssapi*        # [unix]
       - lib/libgssrpc*        # [unix]
+      - lib/libk5crypto*      # [unix]
       - lib/libkadm5*         # [unix]
       - lib/libkdb5*          # [unix]
       - lib/libkrad*          # [unix]
-      - lib/libk5crypto*      # [unix]
-      - lib/libcom_err*       # [unix]
-      - lib/libverto*         # [unix]
+      - lib/libkrb5*          # [unix]
       - lib/libkrb5support*   # [unix]
+      - lib/libverto*         # [unix]
       # Libraries - Windows
-      - {{ win_prefix }}lib/*.lib # [win]
-      - {{ win_prefix }}bin/krb5*.dll # [win]
-      - {{ win_prefix }}bin/gssapi*.dll # [win]
-      - {{ win_prefix }}bin/gssrpc*.dll # [win]
-      - {{ win_prefix }}bin/kadm5*.dll # [win]
-      - {{ win_prefix }}bin/kdb5*.dll # [win]
-      - {{ win_prefix }}bin/krad*.dll # [win]
-      - {{ win_prefix }}bin/k5crypto*.dll # [win]
-      - {{ win_prefix }}bin/comerr*.dll # [win]
-      - {{ win_prefix }}bin/k5sprt*.dll # [win]
-      - {{ win_prefix }}bin/verto*.dll # [win]
-      - {{ win_prefix }}bin/xpprof*.dll # [win]
-      - {{ win_prefix }}bin/kfwlogon*.dll # [win]
-      - {{ win_prefix }}bin/krbcc*.dll # [win]
-      - {{ win_prefix }}bin/leashw*.dll # [win]
+      - {{ win_prefix }}bin/comerr*.dll    # [win]
+      - {{ win_prefix }}bin/gssapi*.dll    # [win]
+      - {{ win_prefix }}bin/gssrpc*.dll    # [win]
+      - {{ win_prefix }}bin/k5crypto*.dll  # [win]
+      - {{ win_prefix }}bin/k5sprt*.dll    # [win]
+      - {{ win_prefix }}bin/kadm5*.dll     # [win]
+      - {{ win_prefix }}bin/kdb5*.dll      # [win]
+      - {{ win_prefix }}bin/kfwlogon*.dll  # [win]
+      - {{ win_prefix }}bin/krad*.dll      # [win]
+      - {{ win_prefix }}bin/krb5*.dll      # [win]
+      - {{ win_prefix }}bin/krbcc*.dll     # [win]
+      - {{ win_prefix }}bin/leashw*.dll    # [win]
       - {{ win_prefix }}bin/plugins/preauth/spake*.dll # [win]
+      - {{ win_prefix }}bin/verto*.dll      # [win]
+      - {{ win_prefix }}bin/xpprof*.dll     # [win]
+      - {{ win_prefix }}bin/krb5_64.dll     # [win]
+      - {{ win_prefix }}lib/*.lib           # [win]
       
       # Headers - Unix
-      - include/     # [unix]
+      - include/krb5.h                      # [unix]
       
       # Headers - Windows
-      - {{ win_prefix }}include/ # [win]
+      - {{ win_prefix }}include/            # [win]
       
       # Development tools (only compile_et, krb5-config goes to krb5 package)
-      - bin/compile_et    # [unix]
-      - {{ win_prefix }}bin/compile_et.exe # [win]
+      - bin/compile_et                      # [unix]
+      - {{ win_prefix }}bin/compile_et.exe  # [win]
       
     requirements:
       build:
         - {{ stdlib("c") }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - libtool  # [unix]
-        - bison       # [not win]
-        - autoconf    # [not win]
-        - msys2-posix       # [win]
-        - perl        # [win]
-        - pkg-config  # [unix]
-        - make        # [unix]
-        - python *    # [not win]
-        - gettext     # [not win]
-        - msys2-gawk    # [win]
+        - libtool      # [unix]
+        - bison        # [not win]
+        - autoconf     # [not win]
+        - msys2-posix  # [win]
+        - perl         # [win]
+        - pkg-config   # [unix]
+        - make         # [unix]
+        - python *     # [not win]
+        - gettext      # [not win]
+        - msys2-gawk   # [win]
       host:
-        - libedit  # [unix]
+        - libedit      # [unix]
+        - lmdb         # [unix]
         - openssl
-        - lmdb                  # [unix]
       run:
+        - lmdb         # [unix]
         - openssl
-        - lmdb                  # [unix]
     test:
       commands:
+        - set -x                                  # [unix]
         - test -f $PREFIX/lib/libkrb5${SHLIB_EXT} # [unix]
         - test -f $PREFIX/include/krb5.h          # [unix]
+        - echo on                                 # [win]
         - if exist "%PREFIX%\\Library\\bin\\krb5_64.dll" (exit 0) else (exit 1) # [win]
-        - if exist "%PREFIX%\\Library\\include\\krb5.h" (exit 0) else (exit 1) # [win]
+        - if exist "%PREFIX%\\Library\\include\\krb5.h" (exit 0) else (exit 1)  # [win]
 
   - name: {{ name }}
     script: build-krb5-split.sh   # [unix]
     script: build-krb5-split.bat  # [win]
     build:
       ignore_run_exports:
-        - openssl
         - libcxx          # [osx]
         - libstdcxx-ng    # [linux]
         - lmdb            # [unix]
+        - openssl
     files:
       # Executables - Unix (only executables, not libraries)
+      - bin/gss-client
+      - bin/k5srvutil
+      - bin/kadmin
+      - bin/kdestroy
       - bin/kinit
       - bin/klist
-      - bin/kdestroy
       - bin/kpasswd
+      - bin/krb5-config
       - bin/kswitch
       - bin/ktutil
       - bin/kvno
-      - bin/k5srvutil
-      - bin/kadmin
-      - bin/gss-client
       - bin/sclient
       - bin/sim_client
       - bin/uuclient
-      - bin/krb5-config
+      - sbin/gss-server
       - sbin/kadmin.local
       - sbin/kadmind
       - sbin/kdb5_util
       - sbin/kprop
       - sbin/kpropd
       - sbin/kproplog
-      - sbin/krb5kdc
       - sbin/krb5-send-pr
-      - sbin/gss-server
+      - sbin/krb5kdc
       - sbin/sim_server
       - sbin/sserver
       - sbin/uuserver
       
       # Manual pages - Unix
+      - share/man/man1/k5srvutil.1
+      - share/man/man1/kadmin.1
+      - share/man/man1/kdestroy.1
       - share/man/man1/kinit.1
       - share/man/man1/klist.1
-      - share/man/man1/kdestroy.1
       - share/man/man1/kpasswd.1
+      - share/man/man1/krb5-config.1
       - share/man/man1/kswitch.1
       - share/man/man1/ktutil.1
       - share/man/man1/kvno.1
-      - share/man/man1/k5srvutil.1
-      - share/man/man1/kadmin.1
       - share/man/man1/sclient.1
-      - share/man/man1/krb5-config.1
       - share/man/man8/kadmin.local.8
       - share/man/man8/kadmind.8
+      - share/man/man8/kdb5_ldap_util.8
       - share/man/man8/kdb5_util.8
       - share/man/man8/kprop.8
       - share/man/man8/kpropd.8
       - share/man/man8/kproplog.8
       - share/man/man8/krb5kdc.8
       - share/man/man8/sserver.8
-      - share/man/man8/kdb5_ldap_util.8
       # Windows executables
+      - {{ win_prefix }}bin/ccapiserver{{ win_suffix }}
+      - {{ win_prefix }}bin/gss-client{{ win_suffix }}
+      - {{ win_prefix }}bin/gss-server{{ win_suffix }}
+      - {{ win_prefix }}bin/k5srvutil{{ win_suffix }}
+      - {{ win_prefix }}bin/kadmin.local{{ win_suffix }}
+      - {{ win_prefix }}bin/kadmin{{ win_suffix }}
+      - {{ win_prefix }}bin/kadmind{{ win_suffix }}
+      - {{ win_prefix }}bin/kcpytkt{{ win_suffix }}
+      - {{ win_prefix }}bin/kdb5_util{{ win_suffix }}
+      - {{ win_prefix }}bin/kdeltkt{{ win_suffix }}
+      - {{ win_prefix }}bin/kdestroy{{ win_suffix }}
+      - {{ win_prefix }}bin/kfwcpcc{{ win_suffix }}
       - {{ win_prefix }}bin/kinit{{ win_suffix }}
       - {{ win_prefix }}bin/klist{{ win_suffix }}
-      - {{ win_prefix }}bin/kdestroy{{ win_suffix }}
       - {{ win_prefix }}bin/kpasswd{{ win_suffix }}
-      - {{ win_prefix }}bin/kswitch{{ win_suffix }}
-      - {{ win_prefix }}bin/ktutil{{ win_suffix }}
-      - {{ win_prefix }}bin/kvno{{ win_suffix }}
-      - {{ win_prefix }}bin/k5srvutil{{ win_suffix }}
-      - {{ win_prefix }}bin/kadmin{{ win_suffix }}
-      - {{ win_prefix }}bin/gss-client{{ win_suffix }}
-      - {{ win_prefix }}bin/sclient{{ win_suffix }}
-      - {{ win_prefix }}bin/sim_client{{ win_suffix }}
-      - {{ win_prefix }}bin/uuclient{{ win_suffix }}
-      - {{ win_prefix }}bin/krb5-config{{ win_suffix }}
-      - {{ win_prefix }}bin/kadmin.local{{ win_suffix }}
-      - {{ win_prefix }}bin/kadmind{{ win_suffix }}
-      - {{ win_prefix }}bin/kdb5_util{{ win_suffix }}
       - {{ win_prefix }}bin/kprop{{ win_suffix }}
       - {{ win_prefix }}bin/kpropd{{ win_suffix }}
       - {{ win_prefix }}bin/kproplog{{ win_suffix }}
-      - {{ win_prefix }}bin/krb5kdc{{ win_suffix }}
+      - {{ win_prefix }}bin/krb5-config{{ win_suffix }}
       - {{ win_prefix }}bin/krb5-send-pr{{ win_suffix }}
-      - {{ win_prefix }}bin/gss-server{{ win_suffix }}
-      - {{ win_prefix }}bin/sim_server{{ win_suffix }}
-      - {{ win_prefix }}bin/sserver{{ win_suffix }}
-      - {{ win_prefix }}bin/uuserver{{ win_suffix }}
-      - {{ win_prefix }}bin/ccapiserver{{ win_suffix }}
-      - {{ win_prefix }}bin/kcpytkt{{ win_suffix }}
-      - {{ win_prefix }}bin/kdeltkt{{ win_suffix }}
-      - {{ win_prefix }}bin/kfwcpcc{{ win_suffix }}
+      - {{ win_prefix }}bin/krb5kdc{{ win_suffix }}
+      - {{ win_prefix }}bin/kswitch{{ win_suffix }}
+      - {{ win_prefix }}bin/ktutil{{ win_suffix }}
+      - {{ win_prefix }}bin/kvno{{ win_suffix }}
       - {{ win_prefix }}bin/mit2ms{{ win_suffix }}
       - {{ win_prefix }}bin/ms2mit{{ win_suffix }}
+      - {{ win_prefix }}bin/sclient{{ win_suffix }}
+      - {{ win_prefix }}bin/sim_client{{ win_suffix }}
+      - {{ win_prefix }}bin/sim_server{{ win_suffix }}
+      - {{ win_prefix }}bin/sserver{{ win_suffix }}
+      - {{ win_prefix }}bin/uuclient{{ win_suffix }}
+      - {{ win_prefix }}bin/uuserver{{ win_suffix }}
     requirements:
       build:
         - {{ stdlib("c") }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - libtool  # [unix]
-        - bison       # [not win]
-        - autoconf    # [not win]
-        - msys2-posix       # [win]
-        - perl        # [win]
-        - pkg-config  # [unix]
-        - make        # [unix]
-        - python *    # [not win]
-        - gettext     # [not win]
-        - msys2-gawk    # [win]
+        - autoconf     # [not win]
+        - bison        # [not win]
+        - gettext      # [not win]
+        - libtool      # [unix]
+        - make         # [unix]
+        - msys2-gawk   # [win]
+        - msys2-posix  # [win]
+        - perl         # [win]
+        - pkg-config   # [unix]
+        - python *     # [not win]
       host:
-        - libedit  # [unix]
+        - libedit      # [unix]
+        - lmdb         # [unix]
         - openssl
-        - lmdb                  # [unix]
         - {{ pin_subpackage('libkrb5', exact=True) }}
       run:
         - {{ pin_subpackage('libkrb5', exact=True) }}
         - libedit  # [unix]
     test:
       commands:
+        - set -x                           # [unix]
         # Test for key executables
-        - test -f $PREFIX/bin/kinit # [unix]
-        - test -f $PREFIX/bin/klist # [unix]
-        - test -f $PREFIX/bin/kdestroy # [unix]
-        - test -f $PREFIX/bin/krb5-config # [unix]
-        - test -f $PREFIX/sbin/krb5kdc # [unix]
+        - test -f $PREFIX/bin/kdestroy     # [unix]
+        - test -f $PREFIX/bin/kinit        # [unix]
+        - test -f $PREFIX/bin/klist        # [unix]
+        - test -f $PREFIX/bin/krb5-config  # [unix]
+        - test -f $PREFIX/sbin/krb5kdc     # [unix]
+        - echo on                          # [win]
         # Test for Windows executables
-        - if exist "%PREFIX%\\Library\\bin\\kinit.exe" (exit 0) else (exit 1) # [win]
-        - if exist "%PREFIX%\\Library\\bin\\klist.exe" (exit 0) else (exit 1) # [win]
+        - if exist "%PREFIX%\\Library\\bin\\kinit.exe" (exit 0) else (exit 1)  # [win]
+        - if exist "%PREFIX%\\Library\\bin\\klist.exe" (exit 0) else (exit 1)  # [win]
 
 about:
   home: https://web.mit.edu/kerberos/
