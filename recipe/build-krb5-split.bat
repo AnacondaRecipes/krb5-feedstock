@@ -6,12 +6,8 @@ echo PREFIX: %LIBRARY_PREFIX%
 echo BUILD_PREFIX: %BUILD_PREFIX%
 echo HOST: %HOST%
 
-REM Check if this is the second package (krb5) - if so, skip build
-if exist "%LIBRARY_PREFIX%\Library\bin\kinit.exe" (
-    echo === SKIPPING BUILD - FILES ALREADY EXIST ===
-    echo This appears to be the second package build. Files already exist.
-    exit /b 0
-)
+REM Always build everything - the file patterns in meta.yaml will determine what gets packaged
+echo === BUILDING KRB5 (ALL COMPONENTS) ===
 
 set NO_LEASH=1
 
@@ -54,15 +50,15 @@ echo === VERIFICATION ===
 echo Checking critical installed files:
 set ERROR_COUNT=0
 
-REM Check for executables
-if exist "%LIBRARY_PREFIX%\Library\bin\kinit.exe" (
+REM Check for executables - use PREFIX which should be the correct install location
+if exist "%PREFIX%\Library\bin\kinit.exe" (
     echo ✓ kinit.exe found in Library/bin/
 ) else (
     echo ✗ ERROR: kinit.exe not found
     set /a ERROR_COUNT+=1
 )
 
-if exist "%LIBRARY_PREFIX%\Library\bin\klist.exe" (
+if exist "%PREFIX%\Library\bin\klist.exe" (
     echo ✓ klist.exe found in Library/bin/
 ) else (
     echo ✗ ERROR: klist.exe not found
@@ -70,14 +66,14 @@ if exist "%LIBRARY_PREFIX%\Library\bin\klist.exe" (
 )
 
 REM Check for additional executables that should be built
-if exist "%LIBRARY_PREFIX%\Library\bin\kpasswd.exe" (
+if exist "%PREFIX%\Library\bin\kpasswd.exe" (
     echo ✓ kpasswd.exe found in Library/bin/
 ) else (
     echo ✗ ERROR: kpasswd.exe not found
     set /a ERROR_COUNT+=1
 )
 
-if exist "%LIBRARY_PREFIX%\Library\bin\kswitch.exe" (
+if exist "%PREFIX%\Library\bin\kswitch.exe" (
     echo ✓ kswitch.exe found in Library/bin/
 ) else (
     echo ✗ ERROR: kswitch.exe not found
@@ -85,7 +81,7 @@ if exist "%LIBRARY_PREFIX%\Library\bin\kswitch.exe" (
 )
 
 REM Check for DLLs
-if exist "%LIBRARY_PREFIX%\Library\bin\krb5_64.dll" (
+if exist "%PREFIX%\Library\bin\krb5_64.dll" (
     echo ✓ krb5_64.dll found in Library/bin/
 ) else (
     echo ✗ ERROR: krb5_64.dll not found
@@ -93,7 +89,7 @@ if exist "%LIBRARY_PREFIX%\Library\bin\krb5_64.dll" (
 )
 
 REM Check for headers
-if exist "%LIBRARY_PREFIX%\Library\include\krb5.h" (
+if exist "%PREFIX%\Library\include\krb5.h" (
     echo ✓ krb5.h found in Library/include/
 ) else (
     echo ✗ ERROR: krb5.h not found
