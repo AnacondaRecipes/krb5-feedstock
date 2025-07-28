@@ -102,7 +102,8 @@ outputs:
       - bin/compile_et                      # [unix]
       - bin/krb5-config                     # [unix]
       - {{ win_prefix }}bin/compile_et.exe  # [win]
-      - {{ win_prefix }}bin/krb5-config{{ win_suffix }}  # [win]
+      # Note: krb5-config.exe might not be built on Windows (Unix-specific utility)
+      # - {{ win_prefix }}bin/krb5-config{{ win_suffix }}  # [win]
       
     requirements:
       build:
@@ -135,7 +136,8 @@ outputs:
         - echo on                                 # [win]
         - if exist "%PREFIX%\\Library\\bin\\krb5_64.dll" (exit 0) else (exit 1) # [win]
         - if exist "%PREFIX%\\Library\\include\\krb5.h" (exit 0) else (exit 1)  # [win]
-        - if exist "%PREFIX%\\Library\\bin\\krb5-config.exe" (exit 0) else (exit 1)  # [win]
+        # Note: krb5-config.exe is not built on Windows (Unix-specific utility)
+        # - if exist "%PREFIX%\\Library\\bin\\krb5-config.exe" (exit 0) else (exit 1)  # [win]
 
   - name: {{ name }}
     script: build-krb5-split.sh   # [unix]
