@@ -93,7 +93,18 @@ outputs:
       - {{ win_prefix }}lib/*.lib           # [win]
       
       # Headers - Unix
+      - include/com_err.h                   # [unix]
+      - include/gssapi.h                    # [unix]
+      - include/gssapi/                     # [unix]
+      - include/gssrpc/                     # [unix]
+      - include/kadm5/                      # [unix]
+      - include/kdb.h                       # [unix]
+      - include/krad.h                      # [unix]
       - include/krb5.h                      # [unix]
+      - include/krb5/                       # [unix]
+      - include/profile.h                   # [unix]
+      - include/verto-module.h              # [unix]
+      - include/verto.h                     # [unix]
       
       # Headers - Windows
       - {{ win_prefix }}include/            # [win]
@@ -132,6 +143,9 @@ outputs:
         - set -x                                  # [unix]
         - test -f $PREFIX/lib/libkrb5${SHLIB_EXT} # [unix]
         - test -f $PREFIX/include/krb5.h          # [unix]
+        - test -f $PREFIX/include/gssapi.h        # [unix]
+        - test -f $PREFIX/include/gssapi/gssapi.h # [unix]
+        - test -f $PREFIX/include/krb5/krb5.h     # [unix]
         - test -f $PREFIX/bin/krb5-config         # [unix]
         - echo on                                 # [win]
         - if exist "%PREFIX%\\Library\\bin\\krb5_64.dll" (exit 0) else (exit 1) # [win]
