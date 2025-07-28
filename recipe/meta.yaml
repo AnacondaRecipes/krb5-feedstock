@@ -98,9 +98,11 @@ outputs:
       # Headers - Windows
       - {{ win_prefix }}include/            # [win]
       
-      # Development tools (only compile_et, krb5-config goes to krb5 package)
+      # Development tools (krb5-config needed for build-time dependencies)
       - bin/compile_et                      # [unix]
+      - bin/krb5-config                     # [unix]
       - {{ win_prefix }}bin/compile_et.exe  # [win]
+      - {{ win_prefix }}bin/krb5-config{{ win_suffix }}  # [win]
       
     requirements:
       build:
@@ -129,9 +131,11 @@ outputs:
         - set -x                                  # [unix]
         - test -f $PREFIX/lib/libkrb5${SHLIB_EXT} # [unix]
         - test -f $PREFIX/include/krb5.h          # [unix]
+        - test -f $PREFIX/bin/krb5-config         # [unix]
         - echo on                                 # [win]
         - if exist "%PREFIX%\\Library\\bin\\krb5_64.dll" (exit 0) else (exit 1) # [win]
         - if exist "%PREFIX%\\Library\\include\\krb5.h" (exit 0) else (exit 1)  # [win]
+        - if exist "%PREFIX%\\Library\\bin\\krb5-config.exe" (exit 0) else (exit 1)  # [win]
 
   - name: {{ name }}
     script: build-krb5-split.sh   # [unix]
@@ -151,7 +155,6 @@ outputs:
       - bin/kinit
       - bin/klist
       - bin/kpasswd
-      - bin/krb5-config
       - bin/kswitch
       - bin/ktutil
       - bin/kvno
@@ -178,7 +181,6 @@ outputs:
       - share/man/man1/kinit.1
       - share/man/man1/klist.1
       - share/man/man1/kpasswd.1
-      - share/man/man1/krb5-config.1
       - share/man/man1/kswitch.1
       - share/man/man1/ktutil.1
       - share/man/man1/kvno.1
@@ -211,7 +213,6 @@ outputs:
       - {{ win_prefix }}bin/kprop{{ win_suffix }}
       - {{ win_prefix }}bin/kpropd{{ win_suffix }}
       - {{ win_prefix }}bin/kproplog{{ win_suffix }}
-      - {{ win_prefix }}bin/krb5-config{{ win_suffix }}
       - {{ win_prefix }}bin/krb5-send-pr{{ win_suffix }}
       - {{ win_prefix }}bin/krb5kdc{{ win_suffix }}
       - {{ win_prefix }}bin/kswitch{{ win_suffix }}
@@ -255,7 +256,6 @@ outputs:
         - test -f $PREFIX/bin/kdestroy     # [unix]
         - test -f $PREFIX/bin/kinit        # [unix]
         - test -f $PREFIX/bin/klist        # [unix]
-        - test -f $PREFIX/bin/krb5-config  # [unix]
         - test -f $PREFIX/sbin/krb5kdc     # [unix]
         - echo on                          # [win]
         # Test for Windows executables

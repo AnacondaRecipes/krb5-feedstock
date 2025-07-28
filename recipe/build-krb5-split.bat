@@ -97,6 +97,14 @@ if exist "%PREFIX%\Library\include\krb5.h" (
     set /a ERROR_COUNT+=1
 )
 
+REM Check for krb5-config utility (needed for build-time dependencies)
+if exist "%PREFIX%\Library\bin\krb5-config.exe" (
+    echo ✓ krb5-config.exe found in Library/bin/
+) else (
+    echo ✗ ERROR: krb5-config.exe not found
+    set /a ERROR_COUNT+=1
+)
+
 if %ERROR_COUNT% GTR 0 (
     echo ERROR: %ERROR_COUNT% critical files missing
     exit /b 1
