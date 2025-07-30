@@ -57,6 +57,9 @@ pushd src
   make install
 popd
 
+# Remove man pages to save space
+rm -rf "${PREFIX}/share/man"
+
 echo "=== VERIFICATION ==="
 echo "Checking critical installed files:"
 CRITICAL_FILES=(

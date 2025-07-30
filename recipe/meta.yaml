@@ -113,8 +113,8 @@ outputs:
       - bin/compile_et                      # [unix]
       - bin/krb5-config                     # [unix]
       - {{ win_prefix }}bin/compile_et.exe  # [win]
-      # Note: krb5-config.exe might not be built on Windows (Unix-specific utility)
-      # - {{ win_prefix }}bin/krb5-config{{ win_suffix }}  # [win]
+      # Note: krb5-config.exe doesn't exist on Windows (Unix-specific utility)
+
       
     requirements:
       build:
@@ -150,8 +150,6 @@ outputs:
         - echo on                                 # [win]
         - if exist "%PREFIX%\\Library\\bin\\krb5_64.dll" (exit 0) else (exit 1) # [win]
         - if exist "%PREFIX%\\Library\\include\\krb5.h" (exit 0) else (exit 1)  # [win]
-        # Note: krb5-config.exe is not built on Windows (Unix-specific utility)
-        # - if exist "%PREFIX%\\Library\\bin\\krb5-config.exe" (exit 0) else (exit 1)  # [win]
 
   - name: {{ name }}
     script: build-krb5-split.sh   # [unix]
@@ -189,27 +187,7 @@ outputs:
       - sbin/sim_server
       - sbin/sserver
       - sbin/uuserver
-      
-      # Manual pages - Unix
-      - share/man/man1/k5srvutil.1
-      - share/man/man1/kadmin.1
-      - share/man/man1/kdestroy.1
-      - share/man/man1/kinit.1
-      - share/man/man1/klist.1
-      - share/man/man1/kpasswd.1
-      - share/man/man1/kswitch.1
-      - share/man/man1/ktutil.1
-      - share/man/man1/kvno.1
-      - share/man/man1/sclient.1
-      - share/man/man8/kadmin.local.8
-      - share/man/man8/kadmind.8
-      - share/man/man8/kdb5_ldap_util.8
-      - share/man/man8/kdb5_util.8
-      - share/man/man8/kprop.8
-      - share/man/man8/kpropd.8
-      - share/man/man8/kproplog.8
-      - share/man/man8/krb5kdc.8
-      - share/man/man8/sserver.8
+
       # Windows executables
       - {{ win_prefix }}bin/ccapiserver{{ win_suffix }}
       - {{ win_prefix }}bin/gss-client{{ win_suffix }}
