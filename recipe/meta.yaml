@@ -2,14 +2,8 @@
 {% set version = "1.21.3" %}
 
 # Platform-specific prefixes and suffixes
-{% set unix_prefix = "" %}
-{% set unix_suffix = "" %}
 {% set win_prefix = "Library/" %}
 {% set win_suffix = ".exe" %}
-
-# Define library names for cleaner templating
-{% set krb5_libs = ["krb5", "gssapi", "gssrpc", "kadm5", "kdb5", "krad", "k5crypto", "com_err", "verto"] %}
-{% set krb5_headers = ["krb5", "gssapi", "kadm5", "kdb5", "krad", "k5crypto"] %}
 
 package:
   name: {{ name|lower }}-split
