@@ -131,7 +131,8 @@ outputs:
         - openssl {{ openssl }}
       run:
         - lmdb         # [unix]
-        - openssl 3.*
+        - openssl      # [unix]
+        - openssl 3.*  # [win]
     test:
       commands:
         - set -x                                  # [unix]
