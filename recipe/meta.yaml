@@ -14,7 +14,7 @@ source:
   sha256: 2157d92020d408ed63ebcd886a92d1346a1383b0f91123a0473b4f69b4a24861
 
 build:
-  number: 2
+  number: 3
   skip: true  # [win and vc<14]
   missing_dso_whitelist:
     - api-ms-win-core-winrt-error-l1-1-0.dll   # [win]
@@ -37,9 +37,9 @@ requirements:
     - pkg-config   # [unix]
     - python *     # [not win]
   host:
-    - libedit      # [unix]
-    - lmdb         # [unix]
-    - openssl
+    - libedit {{ libedit }}   # [unix]
+    - lmdb {{ lmdb }}         # [unix]
+    - openssl {{ openssl }}
 
 outputs:
   - name: lib{{ name }}
@@ -126,12 +126,12 @@ outputs:
         - gettext      # [not win]
         - msys2-gawk   # [win]
       host:
-        - libedit      # [unix]
-        - lmdb         # [unix]
-        - openssl
+        - libedit {{ libedit }}  # [unix]
+        - lmdb {{ lmdb }}        # [unix]
+        - openssl {{ openssl }}
       run:
         - lmdb         # [unix]
-        - openssl
+        - openssl 3.*
     test:
       commands:
         - set -x                                  # [unix]
@@ -230,9 +230,9 @@ outputs:
         - pkg-config   # [unix]
         - python *     # [not win]
       host:
-        - libedit      # [unix]
-        - lmdb         # [unix]
-        - openssl
+        - libedit {{ libedit }}  # [unix]
+        - lmdb {{ lmdb }}        # [unix]
+        - openssl {{ openssl }}
         - {{ pin_subpackage('libkrb5', exact=True) }}
       run:
         - {{ pin_subpackage('libkrb5', exact=True) }}
