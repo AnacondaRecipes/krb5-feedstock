@@ -14,7 +14,7 @@ source:
   sha256: 2157d92020d408ed63ebcd886a92d1346a1383b0f91123a0473b4f69b4a24861
 
 build:
-  number: 3
+  number: 4
   skip: true  # [win and vc<14]
   missing_dso_whitelist:
     - api-ms-win-core-winrt-error-l1-1-0.dll   # [win]
@@ -131,8 +131,7 @@ outputs:
         - openssl {{ openssl }}
       run:
         - lmdb         # [unix]
-        - openssl      # [unix]
-        - openssl 3.*  # [win]
+        - openssl
     test:
       commands:
         - set -x                                  # [unix]
