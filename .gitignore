@@ -1,3 +1,7 @@
 *.pyc
 
 build_artifacts
+# Cursor temporary files
+/.cursor/tmp/
+# Cursor rules files
+/.cursor/rules/
