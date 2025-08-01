@@ -8,8 +8,23 @@ echo === BUILDING KRB5 (ALL COMPONENTS) ===
 
 set NO_LEASH=1
 
-REM Finds stdint.h from msinttypes.
+REM Set up proper library paths for conda OpenSSL
 set INCLUDE=%LIBRARY_INC%;%INCLUDE%
+set LIB=%LIBRARY_LIB%;%LIB%
+set LIBPATH=%LIBRARY_LIB%;%LIBPATH%
+
+REM Explicitly set OpenSSL paths for nmake
+set OPENSSL_ROOT_DIR=%LIBRARY_PREFIX%
+set OPENSSL_INCLUDE_DIR=%LIBRARY_INC%
+set OPENSSL_LIB_DIR=%LIBRARY_LIB%
+
+REM Debug: Show which OpenSSL will be used
+echo OpenSSL headers: %OPENSSL_INCLUDE_DIR%
+echo OpenSSL libs: %OPENSSL_LIB_DIR%
+if exist "%LIBRARY_INC%\openssl\opensslv.h" (
+    echo Found OpenSSL headers in conda environment
+    findstr /C:"OPENSSL_VERSION_TEXT" "%LIBRARY_INC%\openssl\opensslv.h"
+)
 
 REM Set the install path
 set KRB_INSTALL_DIR=%LIBRARY_PREFIX%
