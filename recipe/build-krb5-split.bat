@@ -10,17 +10,17 @@ set NO_LEASH=1
 
 REM Set up proper library paths for conda OpenSSL
 set INCLUDE=%LIBRARY_INC%;%INCLUDE%
-set LIB=%LIBRARY_LIB%;%LIB%
-set LIBPATH=%LIBRARY_LIB%;%LIBPATH%
+@REM set LIB=%LIBRARY_LIB%;%LIB%
+@REM set LIBPATH=%LIBRARY_LIB%;%LIBPATH%
 
-REM Explicitly set OpenSSL paths for nmake
-set OPENSSL_ROOT_DIR=%LIBRARY_PREFIX%
-set OPENSSL_INCLUDE_DIR=%LIBRARY_INC%
-set OPENSSL_LIB_DIR=%LIBRARY_LIB%
+@REM REM Explicitly set OpenSSL paths for nmake
+@REM set OPENSSL_ROOT_DIR=%LIBRARY_PREFIX%
+@REM set OPENSSL_INCLUDE_DIR=%LIBRARY_INC%
+@REM set OPENSSL_LIB_DIR=%LIBRARY_LIB%
 
-REM Debug: Show which OpenSSL will be used
-echo OpenSSL headers: %OPENSSL_INCLUDE_DIR%
-echo OpenSSL libs: %OPENSSL_LIB_DIR%
+@REM REM Debug: Show which OpenSSL will be used
+@REM echo OpenSSL headers: %OPENSSL_INCLUDE_DIR%
+@REM echo OpenSSL libs: %OPENSSL_LIB_DIR%
 if exist "%LIBRARY_INC%\openssl\opensslv.h" (
     echo Found OpenSSL headers in conda environment
     findstr /C:"OPENSSL_VERSION_TEXT" "%LIBRARY_INC%\openssl\opensslv.h"
