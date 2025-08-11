@@ -83,7 +83,14 @@ outputs:
       - {{ win_prefix }}bin/verto*.dll      # [win]
       - {{ win_prefix }}bin/xpprof*.dll     # [win]
       - {{ win_prefix }}bin/krb5_64.dll     # [win]
-      - {{ win_prefix }}lib/*.lib           # [win]
+      - {{ win_prefix }}lib/comerr*.lib      # [win]
+      - {{ win_prefix }}lib/gssapi*.lib      # [win]
+      - {{ win_prefix }}lib/k5sprt*.lib      # [win]
+      - {{ win_prefix }}lib/kfwlogon*.lib    # [win]
+      - {{ win_prefix }}lib/krb5*.lib        # [win]
+      - {{ win_prefix }}lib/krbcc*.lib       # [win]
+      - {{ win_prefix }}lib/leashw*.lib      # [win]
+      - {{ win_prefix }}lib/xpprof*.lib      # [win]
       
       # Headers - Unix
       - include/com_err.h                   # [unix]
@@ -100,7 +107,12 @@ outputs:
       - include/verto.h                     # [unix]
       
       # Headers - Windows
-      - {{ win_prefix }}include/            # [win]
+      - {{ win_prefix }}include/com_err.h   # [win]
+      - {{ win_prefix }}include/gssapi/     # [win]
+      - {{ win_prefix }}include/krb5.h      # [win]
+      - {{ win_prefix }}include/krb5/       # [win]
+      - {{ win_prefix }}include/profile.h   # [win]
+      - {{ win_prefix }}include/win-mac.h   # [win]
       
       # Development tools (krb5-config needed for build-time dependencies)
       - bin/compile_et                      # [unix]
