@@ -14,7 +14,7 @@ source:
   sha256: 2157d92020d408ed63ebcd886a92d1346a1383b0f91123a0473b4f69b4a24861
 
 build:
-  number: 3
+  number: 4
   skip: true  # [win and vc<14]
   missing_dso_whitelist:
     - api-ms-win-core-winrt-error-l1-1-0.dll   # [win]
@@ -39,7 +39,7 @@ requirements:
   host:
     - libedit {{ libedit }}   # [unix]
     - lmdb {{ lmdb }}         # [unix]
-    - openssl {{ openssl }}
+    - openssl {{ openssl }}   # [unix]
 
 outputs:
   - name: lib{{ name }}
@@ -54,7 +54,6 @@ outputs:
         - libstdcxx-ng    # [linux]
         - lmdb            # [unix]
         - ncurses         # [unix]
-        - openssl         # [win]
     files:
       # Libraries - Unix (only krb5 libraries, not executables)
       - lib/libcom_err*       # [unix]
@@ -84,7 +83,14 @@ outputs:
       - {{ win_prefix }}bin/verto*.dll      # [win]
       - {{ win_prefix }}bin/xpprof*.dll     # [win]
       - {{ win_prefix }}bin/krb5_64.dll     # [win]
-      - {{ win_prefix }}lib/*.lib           # [win]
+      - {{ win_prefix }}lib/comerr*.lib      # [win]
+      - {{ win_prefix }}lib/gssapi*.lib      # [win]
+      - {{ win_prefix }}lib/k5sprt*.lib      # [win]
+      - {{ win_prefix }}lib/kfwlogon*.lib    # [win]
+      - {{ win_prefix }}lib/krb5*.lib        # [win]
+      - {{ win_prefix }}lib/krbcc*.lib       # [win]
+      - {{ win_prefix }}lib/leashw*.lib      # [win]
+      - {{ win_prefix }}lib/xpprof*.lib      # [win]
       
       # Headers - Unix
       - include/com_err.h                   # [unix]
@@ -101,7 +107,12 @@ outputs:
       - include/verto.h                     # [unix]
       
       # Headers - Windows
-      - {{ win_prefix }}include/            # [win]
+      - {{ win_prefix }}include/com_err.h   # [win]
+      - {{ win_prefix }}include/gssapi/     # [win]
+      - {{ win_prefix }}include/krb5.h      # [win]
+      - {{ win_prefix }}include/krb5/       # [win]
+      - {{ win_prefix }}include/profile.h   # [win]
+      - {{ win_prefix }}include/win-mac.h   # [win]
       
       # Development tools (krb5-config needed for build-time dependencies)
       - bin/compile_et                      # [unix]
@@ -128,11 +139,10 @@ outputs:
       host:
         - libedit {{ libedit }}  # [unix]
         - lmdb {{ lmdb }}        # [unix]
-        - openssl {{ openssl }}
+        - openssl {{ openssl }}  # [unix]
       run:
         - lmdb         # [unix]
-        - openssl      # [unix]
-        - openssl 3.*  # [win]
+        - openssl      # [unix] 
     test:
       commands:
         - set -x                                  # [unix]
@@ -154,7 +164,7 @@ outputs:
         - libcxx          # [osx]
         - libstdcxx-ng    # [linux]
         - lmdb            # [unix]
-        - openssl
+        - openssl         # [unix]
     files:
       # Executables - Unix (only executables, not libraries)
       - bin/gss-client
@@ -233,7 +243,7 @@ outputs:
       host:
         - libedit {{ libedit }}  # [unix]
         - lmdb {{ lmdb }}        # [unix]
-        - openssl {{ openssl }}
+        - openssl {{ openssl }}  # [unix]
         - {{ pin_subpackage('libkrb5', exact=True) }}
       run:
         - {{ pin_subpackage('libkrb5', exact=True) }}
