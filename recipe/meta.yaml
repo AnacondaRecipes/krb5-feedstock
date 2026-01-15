@@ -1,5 +1,5 @@
 {% set name = "krb5" %}
-{% set version = "1.21.3" %}
+{% set version = "1.22.1" %}
 
 # Platform-specific prefixes and suffixes
 {% set win_prefix = "Library/" %}
@@ -11,10 +11,10 @@ package:
 
 source:
   url: https://github.com/krb5/{{ name }}/archive/{{ name }}-{{ version }}-final.tar.gz
-  sha256: 2157d92020d408ed63ebcd886a92d1346a1383b0f91123a0473b4f69b4a24861
+  sha256: d7dd1ded54c1c2d3381da4a266935feda6ba6398155720df27e2975bd5a39239
 
 build:
-  number: 4
+  number: 0
   skip: true  # [win and vc<14]
   missing_dso_whitelist:
     - api-ms-win-core-winrt-error-l1-1-0.dll   # [win]
@@ -23,7 +23,7 @@ build:
 
 requirements:
   build:
-    - {{ stdlib("c") }}
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - autoconf     # [not win]
@@ -123,7 +123,7 @@ outputs:
       
     requirements:
       build:
-        - {{ stdlib("c") }}
+        - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - libtool      # [unix]
@@ -227,7 +227,7 @@ outputs:
       - {{ win_prefix }}bin/uuserver{{ win_suffix }}
     requirements:
       build:
-        - {{ stdlib("c") }}
+        - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - autoconf     # [not win]
@@ -262,7 +262,7 @@ outputs:
         - if exist "%PREFIX%\\Library\\bin\\klist.exe" (exit 0) else (exit 1)  # [win]
 
 about:
-  home: https://web.mit.edu/kerberos/
+  home: https://web.mit.edu/kerberos
   license: MIT
   license_family: MIT
   license_file: doc/notice.rst
