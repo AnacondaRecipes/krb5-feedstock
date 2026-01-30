@@ -24,10 +24,22 @@ REM Fix perl locale warnings
 set LC_ALL=C
 set LANG=C
 
+REM Detect if building for ARM64 (native or cross)
+set IS_ARM64=0
+if "%target_platform%"=="win-arm64" set IS_ARM64=1
+if "%PROCESSOR_ARCHITECTURE%"=="ARM64" set IS_ARM64=1
+
+REM For ARM64: The krb5 makefile doesn't know about ARM64, so we use AMD64
+REM Both are 64-bit little-endian, so the makefile logic works correctly
+if "%IS_ARM64%"=="1" (
+    echo === Setting CPU=AMD64 for ARM64 build compatibility ===
+    set CPU=AMD64
+)
+
 cd src
 
-REM For ARM64, fix CCAPI build issues
-if "%CONDA_BUILD_CROSS_COMPILATION%"=="1" (
+REM For ARM64, fix CCAPI build issues (both native and cross-compile)
+if "%IS_ARM64%"=="1" (
 
     REM For ARM64, define little-endian for brg_endian.h detection
     set "CL=/D__LITTLE_ENDIAN__ %CL%"
