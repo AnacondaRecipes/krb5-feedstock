@@ -1,0 +1,7 @@
+anaconda_config_version: 1
+upstream_sources:
+  - github:
+      identifier: krb5/krb5
+    packages:
+      - krb5
+      - libkrb5
