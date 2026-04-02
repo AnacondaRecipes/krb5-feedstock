@@ -14,7 +14,7 @@ source:
   sha256: d7dd1ded54c1c2d3381da4a266935feda6ba6398155720df27e2975bd5a39239
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win and vc<14]
   missing_dso_whitelist:
     - api-ms-win-core-winrt-error-l1-1-0.dll   # [win]
@@ -142,7 +142,9 @@ outputs:
         - openssl {{ openssl }}  # [unix]
       run:
         - lmdb         # [unix]
-        - openssl      # [unix] 
+        - openssl      # [unix]
+      run_constrained:
+        - krb5 {{ version }}
     test:
       commands:
         - set -x                                  # [unix]
