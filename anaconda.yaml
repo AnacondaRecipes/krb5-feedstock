@@ -3,9 +3,9 @@ upstream_sources:
   - github:
       identifier: krb5/krb5
       use_max_tag: true
-      include_regex: ^krb5-\d+\.\d+\.\d+(?:-(?:final|release|ga))?$
       prefix: krb5-
-      from_pattern: ^(\d+\.\d+\.\d+)(?:-(?:final|release|ga))?$
+      include_regex: ^krb5-\d+\.\d+\.\d+(?:-.+)?$
+      from_pattern: ^(\d+\.\d+\.\d+)(?:-.+)?$
       to_pattern: \1
     packages:
       - krb5
