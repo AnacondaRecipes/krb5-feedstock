@@ -15,7 +15,6 @@ source:
 
 build:
   number: 0
-  skip: true  # [win and vc<14]
   missing_dso_whitelist:
     - api-ms-win-core-winrt-error-l1-1-0.dll   # [win]
     - api-ms-win-core-winrt-l1-1-0.dll         # [win]
@@ -155,8 +154,8 @@ outputs:
         - test -f $PREFIX/include/krb5/krb5.h     # [unix]
         - test -f $PREFIX/bin/krb5-config         # [unix]
         - echo on                                 # [win]
-        - if exist "%PREFIX%\\Library\\bin\\krb5_64.dll" (exit 0) else (exit 1) # [win]
-        - if exist "%PREFIX%\\Library\\include\\krb5.h" (exit 0) else (exit 1)  # [win]
+        - if not exist "%PREFIX%\\Library\\bin\\krb5_64.dll" exit 1  # [win]
+        - if not exist "%PREFIX%\\Library\\include\\krb5.h" exit 1   # [win]
 
   - name: {{ name }}
     script: build-krb5-split.sh   # [unix]
@@ -260,8 +259,8 @@ outputs:
         - test -f $PREFIX/sbin/krb5kdc     # [unix]
         - echo on                          # [win]
         # Test for Windows executables
-        - if exist "%PREFIX%\\Library\\bin\\kinit.exe" (exit 0) else (exit 1)  # [win]
-        - if exist "%PREFIX%\\Library\\bin\\klist.exe" (exit 0) else (exit 1)  # [win]
+        - if not exist "%PREFIX%\\Library\\bin\\kinit.exe" exit 1  # [win]
+        - if not exist "%PREFIX%\\Library\\bin\\klist.exe" exit 1  # [win]
 
 about:
   home: https://web.mit.edu/kerberos
